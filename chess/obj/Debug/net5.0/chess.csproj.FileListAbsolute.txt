@@ -1,0 +1,16 @@
+C:\Users\Юрчик\source\repos\chess\chess\bin\Debug\net5.0\chess.exe
+C:\Users\Юрчик\source\repos\chess\chess\bin\Debug\net5.0\chess.deps.json
+C:\Users\Юрчик\source\repos\chess\chess\bin\Debug\net5.0\chess.runtimeconfig.json
+C:\Users\Юрчик\source\repos\chess\chess\bin\Debug\net5.0\chess.runtimeconfig.dev.json
+C:\Users\Юрчик\source\repos\chess\chess\bin\Debug\net5.0\chess.dll
+C:\Users\Юрчик\source\repos\chess\chess\bin\Debug\net5.0\ref\chess.dll
+C:\Users\Юрчик\source\repos\chess\chess\bin\Debug\net5.0\chess.pdb
+C:\Users\Юрчик\source\repos\chess\chess\obj\Debug\net5.0\chess.csproj.AssemblyReference.cache
+C:\Users\Юрчик\source\repos\chess\chess\obj\Debug\net5.0\chess.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Юрчик\source\repos\chess\chess\obj\Debug\net5.0\chess.AssemblyInfoInputs.cache
+C:\Users\Юрчик\source\repos\chess\chess\obj\Debug\net5.0\chess.AssemblyInfo.cs
+C:\Users\Юрчик\source\repos\chess\chess\obj\Debug\net5.0\chess.csproj.CoreCompileInputs.cache
+C:\Users\Юрчик\source\repos\chess\chess\obj\Debug\net5.0\chess.dll
+C:\Users\Юрчик\source\repos\chess\chess\obj\Debug\net5.0\ref\chess.dll
+C:\Users\Юрчик\source\repos\chess\chess\obj\Debug\net5.0\chess.pdb
+C:\Users\Юрчик\source\repos\chess\chess\obj\Debug\net5.0\chess.genruntimeconfig.cache
