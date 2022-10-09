@@ -83,27 +83,24 @@ namespace chess
         public static void HighLightPossibleMoves(ChessPiece piece)
         {
      
-            int i, j;
-            piece.VallidCells.Sort();
-            ChessCells currentCell;
+           
+            
             piece.ProduceValidCells(piece);
             piece.CheckAlliesOnTheWay(piece);
 
 
             foreach (var vallidCell in piece.VallidCells)
             {
-                i = Convert.ToInt32(vallidCell[0].ToString());
-                j = Convert.ToInt32(vallidCell[1].ToString());
-                currentCell = ChessTable.GetChessCell(i, j);
 
-                currentCell.IsHighLighted = true;
 
-                if (currentCell.CellIsWhite)
+                vallidCell.IsHighLighted = true;
+
+                if (vallidCell.CellIsWhite)
                 {
-                    currentCell.SetColorOfCell(currentCell, "▓▓▓");
+                    vallidCell.SetColorOfCell(vallidCell, "▓▓▓");
                 }
                 else
-                    currentCell.SetColorOfCell(currentCell, "▒▒▒");  
+                    vallidCell.SetColorOfCell(vallidCell, "▒▒▒");  
                
             }
 

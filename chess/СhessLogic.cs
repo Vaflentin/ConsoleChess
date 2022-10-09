@@ -44,10 +44,10 @@ namespace chess
 
 
 
-    class ChessCells
+   public class ChessCells
     {
-        private int I { get; set; }
-        private int J { get; set; }
+        private int _i;
+        private int _j;
 
         private string _cellsCondition;
         private bool _hasPiece;
@@ -55,9 +55,20 @@ namespace chess
         private bool _cellIsWhite;
         private bool _isHighLighted;
 
-        private int myVar;
 
-    
+     
+        public int I
+        {
+            get { return _i; }
+            set { _i = value; }
+        }
+        public int J
+        {
+            get { return _j; }
+            set { _j = value; }
+        }
+
+
 
         public bool IsHighLighted
         {

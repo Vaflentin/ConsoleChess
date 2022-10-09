@@ -17,7 +17,9 @@ namespace chess
         move,
         create,
         delete,
-        start
+        start,
+        place
+          
     }
     abstract class ChessCommand
     {
@@ -207,6 +209,26 @@ namespace chess
                     }
                     break;
 
+                case UserCommands.place:
+                    {
+                     Console.Write("Enter new coordinates: ");
+
+                        ChessOutPut.DisableHighLighting();
+                        var newCoordinates = Console.ReadLine().ToLower();
+
+                        var errorMessageAfterValidation = ChessDataValidation.CheckFormatFalidation(newCoordinates);
+                        ChessMessages.OutPutErrorMessages(errorMessageAfterValidation);
+
+                        newCoordinates = ChessDataValidation.ConvertCoordinates(newCoordinates);
+                        i = Convert.ToInt32(newCoordinates[0].ToString());
+
+                        var newJ = Convert.ToInt32(newCoordinates[1].ToString());
+                        chessPiece.Replace(chessPiece, i, newJ);
+
+                        InitializeUsersCommands();
+                    }
+
+                    break;
                 case UserCommands.back:
                     {
                         ChessOutPut.DisableHighLighting();
