@@ -752,13 +752,13 @@ namespace chess
                         {
                           
                             chessPiece.straightUpLineValidCells.RemoveRange(counter, chessPiece.straightUpLineValidCells.Count - counter);
-                            counter++;
+                           
                         }
 
                     }
                     else break;
+                    counter++;
 
-                
                 }
 
                 tempolarCells = new  List<ChessCells>(chessPiece.straightRightLineValidCells);
