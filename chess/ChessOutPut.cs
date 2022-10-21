@@ -18,9 +18,7 @@ namespace chess
 
     }
    
- 
 
- 
 
     public static class ChessOutPut 
     {
@@ -57,8 +55,6 @@ namespace chess
         }
 
 
-
-
         private static void ChessLogOutPut()
         {
             List<string> chessLogs = ChessTable.ChessLogs;
@@ -83,10 +79,6 @@ namespace chess
         public static void HighLightPossibleMoves(ChessPiece piece)
         {
      
-           
-            
-            piece.ProduceValidCells(piece);
-            piece.CheckAlliesOnTheWay(piece);
 
 
             foreach (var vallidCell in piece.VallidCells)
@@ -97,16 +89,12 @@ namespace chess
 
                 if (vallidCell.CellIsWhite)
                 {
-                    vallidCell.SetColorOfCell(vallidCell, "▓▓▓");
+                    vallidCell.SetColorOfCell( "▓▓▓");
                 }
                 else
-                    vallidCell.SetColorOfCell(vallidCell, "▒▒▒");  
+                    vallidCell.SetColorOfCell( "▒▒▒");  
                
             }
-
-
-          
-
 
         }
         private static string[,] CreateFakeChessTable()
@@ -141,19 +129,19 @@ namespace chess
                             if (((1 - i + j) % 2 == 0) && currentCell.IsHighLighted != true)
                             {
 
-                                currentCell.SetColorOfCell(currentCell, "   ");
+                                currentCell.SetColorOfCell("   ");
 
                             }
                             else
                                 if (currentCell.IsHighLighted != true)
                             {
-                                currentCell.SetColorOfCell(currentCell, "███");
+                                currentCell.SetColorOfCell("███");
                             }
                                
 
                             if (currentCell.HasPiece)
                             {
-                                currentCell.SetCellCondition(currentCell);
+                                currentCell.SetCellCondition();
                             }
 
                             fakeChessTable[i, j] = currentCell.CellsCondition;
@@ -172,8 +160,5 @@ namespace chess
 
 
     }
-
-
-   
 
 }

@@ -25,16 +25,16 @@ namespace chess
                 var currentFakeChessTable = ChessOutPut.GetFakeChessTable();
                 var currentCell = currentFakeChessTable[i + 1, j + 1];
 
-                if (currentCell[1] != currentPiece[0])
-                {
-                    ChessMessages.OutPutErrorMessages(Errors.CellDoesNotContainSuchPiece);
-                    
-                }
-                else
+                if (ChessPiece.SelectPiece(i, j) == Errors.NoErrors)
                 {
                     ChessOutPut.DisableHighLighting();
                     ChessCommand.ProcessPieceMovementCommand(userCommand, currentPiece);
-                    
+
+                }
+            
+                else
+                {
+                    ChessMessages.OutPutErrorMessages(Errors.CellDoesNotContainSuchPiece);
                 }
             }
 
