@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace chess
 {
-    class King : ChessPiece
+    class King : ChessPiece 
     {
 
         public King(int i, int j, string pieceName, bool isWhite) : base(i, j, pieceName, isWhite)
@@ -16,7 +16,23 @@ namespace chess
 
         public override void CheckPiecesOnTheWay(ChessPiece chessPiece)
         {
+            List<ChessCells> tempolarCells = new List<ChessCells>(chessPiece.VallidCells);
+            foreach (var cell in tempolarCells)
+            {
+                if (cell.HasPiece)
+                {
+                    if (chessPiece.IsWhite && cell.ChessPiece.IsWhite)
+                    {
+                        chessPiece.VallidCells.Remove(cell);
+                    }
 
+                  if (!chessPiece.IsWhite && !cell.ChessPiece.IsWhite)
+                    {
+                        chessPiece.VallidCells.Remove(cell);
+                    }
+                }
+            }
+          
         }
 
         public override void ProduceValidCells(ChessPiece king)
@@ -30,7 +46,7 @@ namespace chess
                 {
                     if ((i < 8 && i >= 0) && (j < 8 && j >= 0))
                     {
-                        //currentKing.validCells.Add(i.ToString() + j.ToString());
+           
                         currentKing.validCells.Add(ChessTable.GetChessCell(i, j));
                     }
 
@@ -40,21 +56,5 @@ namespace chess
             DeleteInvalidCellsFromList(currentKing);
         }
 
-        public override Errors ValidateSquares(ChessPiece king, int i, int j)
-        {
-            King currentKing = (King)king;
-
-            ProduceValidCells(currentKing);
-
-
-            if (!ProcessValidCells(i, j, currentKing.validCells))
-            {
-                return Errors.InvalidSquare;
-            }
-            else
-
-                return Errors.NoErrors;
-
-        }
     }
 }

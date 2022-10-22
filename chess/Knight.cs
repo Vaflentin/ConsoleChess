@@ -24,9 +24,10 @@ namespace chess
 
         }
 
-        public override void CheckPiecesOnTheWay(ChessPiece chessPiece)
+        public override void CheckPiecesOnTheWay(ChessPiece chessPiece) // todo: зарефакторить с королем
         {
             List<ChessCells> tempolarList = new List<ChessCells>(chessPiece.VallidCells);
+
             foreach (var cell in tempolarList)
             {
                 if (chessPiece.IsWhite)
@@ -36,7 +37,13 @@ namespace chess
                         chessPiece.VallidCells.Remove(cell);
                     }
                 }
-
+                if (!chessPiece.IsWhite)
+                {
+                    if (cell.HasPiece && !cell.ChessPiece.IsWhite)
+                    {
+                        chessPiece.VallidCells.Remove(cell);
+                    }
+                }
 
             }
         }
@@ -113,25 +120,13 @@ namespace chess
             {
                 CheckKnightMovesValidation((Knight)knight, (KnightMoves)i);
             }
-            CheckPiecesOnTheWay(knight);
+            //CheckPiecesOnTheWay(knight);
 
 
 
             DeleteInvalidCellsFromList(knight);
         }
 
-        public override Errors ValidateSquares(ChessPiece knight, int i, int j)
-        {
-            ProduceValidCells(knight);
 
-            if (!ProcessValidCells(i, j, knight.VallidCells))
-            {
-                return Errors.InvalidSquare;
-            }
-
-            return Errors.NoErrors;
-
-
-        }
     }
 }

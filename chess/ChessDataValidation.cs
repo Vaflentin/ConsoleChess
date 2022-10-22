@@ -22,10 +22,11 @@ namespace chess
                 userCommand = ConvertCoordinates(userCommand);
                 var i = Convert.ToInt32(userCommand[0].ToString());
                 var j = Convert.ToInt32(userCommand[1].ToString());
-                var currentFakeChessTable = ChessOutPut.GetFakeChessTable();
-                var currentCell = currentFakeChessTable[i + 1, j + 1];
+                var pieceName = userCommand[2].ToString();
+                //var currentFakeChessTable = ChessOutPut.GetFakeChessTable();
+                //var currentCell = currentFakeChessTable[i + 1, j + 1];
 
-                if (ChessPiece.SelectPiece(i, j) == Errors.NoErrors)
+                if (ChessPiece.SelectPiece(i, j,pieceName) == Errors.NoErrors)
                 {
                     ChessOutPut.DisableHighLighting();
                     ChessCommand.ProcessPieceMovementCommand(userCommand, currentPiece);

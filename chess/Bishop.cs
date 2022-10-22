@@ -18,17 +18,17 @@ namespace chess
 
 
 
-        public override Errors ValidateSquares(ChessPiece bishop, int i, int j)
-        {
+        //public override Errors ValidateSquares(ChessPiece bishop, int i, int j)
+        //{
 
-            if (ProcessValidCells(i, j, bishop.VallidCells) != true)
-            {
-                return Errors.InvalidSquare;
-            }
+        //    if (ProcessValidCells(i, j, bishop.VallidCells) != true)
+        //    {
+        //        return Errors.InvalidSquare;
+        //    }
 
-            return Errors.NoErrors;
+        //    return Errors.NoErrors;
 
-        }
+        //}
 
         public override void ProduceValidCells(ChessPiece bishop)
         {

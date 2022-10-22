@@ -26,7 +26,7 @@ namespace chess
         public int I { get; protected set; }
         public int J { get; protected set; }
 
- 
+        protected bool _isFirstMove = true;
 
 
         abstract public void CheckPiecesOnTheWay(ChessPiece chessPiece);
@@ -42,7 +42,7 @@ namespace chess
             foreach (var field in listFields)
             {
    
-                if (field.FieldType.IsGenericType)
+                if (field.FieldType.IsGenericType && field.Name != "VallidCells" && field.Name != "vallidCells")
                 {
                     var currentList = (List < ChessCells >) field.GetValue(chessPiece);
                     allCellLists.Add(currentList);
@@ -62,7 +62,7 @@ namespace chess
             chessPiece.validCells.RemoveAll(cell => (cell.I == chessPiece.I) && (cell.J == chessPiece.J));
 
         }
-        protected static bool ProcessValidCells(int i, int j, List<ChessCells> validCells)
+        protected static bool CheckForValidCell(int i, int j, List<ChessCells> validCells)
         {
 
             foreach (ChessCells cell in validCells)
@@ -78,32 +78,30 @@ namespace chess
         public void Replace(ChessPiece chessPiece, int i, int j)
         {
             ChessPiece currentPiece = chessPiece;
-
+           
             ChessTable.DeletePiece(chessPiece.I, chessPiece.J);
             currentPiece.I = i;
             currentPiece.J = j;
             ChessTable.PlacePiece(currentPiece);
         }
-        public static Errors SelectPiece(int i, int j)
+        public static Errors SelectPiece(int i, int j, string pieceName)
         {
 
-            var currentTable = ChessTable.ChessCells;
-            var chessCell = currentTable[i, j];
+            var chessCell = ChessTable.GetChessCell(i, j);
             var piece = chessCell.ChessPiece;
 
-            if (!chessCell.HasPiece)
+            if (chessCell.HasPiece && chessCell.ChessPiece.PieceName == pieceName)
             {
-                return Errors.CellDoesNotContainSuchPiece;
-               
+                piece.ProduceValidCells(piece);
+                piece.CheckPiecesOnTheWay(piece);
 
+                return Errors.NoErrors;
             }
-            else
-            {
-            piece.ProduceValidCells(piece);
-            return Errors.NoErrors;
-            }
+
+
+            return Errors.CellDoesNotContainSuchPiece;
           
-              
+
            
         }
 
@@ -123,6 +121,8 @@ namespace chess
                 currentPiece.I = i;
                 currentPiece.J = j;
 
+                _isFirstMove = false;
+
                 ChessTable.PlacePiece(currentPiece);
 
                 ChessTable.SetChessLog(currentPiece.PieceName, currentPiece.I, currentPiece.J);
@@ -136,7 +136,17 @@ namespace chess
 
 
         abstract public void ProduceValidCells(ChessPiece chessPiece);
-        abstract public Errors ValidateSquares(ChessPiece chessPiece, int i, int j);
+        protected  virtual Errors ValidateSquares(ChessPiece chessPiece, int i, int j)
+        {
+
+            if (!CheckForValidCell(i, j, chessPiece.VallidCells))
+            {
+                return Errors.InvalidSquare;
+            }
+
+            return Errors.NoErrors;
+        }
+    
 
 
         public ChessPiece(int i, int j, string pieceName, bool isWhite)

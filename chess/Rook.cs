@@ -20,24 +20,24 @@ namespace chess
             Rook currentRook = (Rook)rook;
 
             currentRook.ProduceStraightCells();
-            currentRook.CheckPiecesOnTheWay(currentRook);
-            SortThroughCellLists(currentRook);
+            //currentRook.CheckPiecesOnTheWay(currentRook);
+          
             MergeVallidCellsArray(currentRook);
             DeleteInvalidCellsFromList(currentRook);
         }
 
-        public override Errors ValidateSquares(ChessPiece rook, int i, int j)
-        {
+        //public override Errors ValidateSquares(ChessPiece rook, int i, int j)
+        //{
 
 
 
-            if (!ProcessValidCells(i, j, rook.VallidCells))
-            {
-                return Errors.InvalidSquare;
-            }
+        //    if (!ProcessValidCells(i, j, rook.VallidCells))
+        //    {
+        //        return Errors.InvalidSquare;
+        //    }
 
 
-            return Errors.NoErrors;
-        }
+        //    return Errors.NoErrors;
+        //}
     }
 }

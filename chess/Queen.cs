@@ -149,11 +149,14 @@ namespace chess
             foreach (var member in fields)
             {
 
+                if ( member.GetValue(chessPiece) is IList<ChessCells>)
+                {
+                    var memberValue = member.GetValue(chessPiece);
+                    List<ChessCells> currentList = (List<ChessCells>)memberValue;
 
-                var memberValue = member.GetValue(chessPiece);
-                List<ChessCells> currentList = (List<ChessCells>)memberValue;
-
-                chessPiece.VallidCells.AddRange(currentList);
+                    chessPiece.VallidCells.AddRange(currentList);
+                }
+             
 
             }
 
@@ -235,162 +238,23 @@ namespace chess
             currentQueen.ProduceDiagonalCells();
             currentQueen.ProduceStraightCells();
 
-            CheckPiecesOnTheWay(currentQueen);
-            MergeVallidCellsArray(currentQueen);
-            DeleteInvalidCellsFromList(currentQueen);
+            //CheckPiecesOnTheWay(currentQueen);
+
+   
 
         }
 
 
 
-        public override Errors ValidateSquares(ChessPiece queen, int i, int j)
+
+
+        protected static void ProcessPiecesOnTheWay(Queen chessPiece, List<ChessCells> list) // todo:: Надо зарефакторить - упростить код
         {
-
-
-
-            if (ProcessValidCells(i, j, queen.VallidCells) != true)
-            {
-                return Errors.InvalidSquare;
-            }
-
-
-
-            return Errors.NoErrors;
-        }
-
-        //protected static void CheckAlliesOnDiagonalyLines(Queen chessPiece)
-        //{
-
-        //    ComparerI comparerI = new ComparerI();
-
-        //    List<ChessCells> tempolarCells = new List<ChessCells>(chessPiece.diagonalUpperLeftValidCells);
-
-        //    int counter = 0;
-
-        //    tempolarCells.Sort(comparerI);
-        //    chessPiece.diagonalUpperLeftValidCells.Sort(comparerI);
-
-        //    if (chessPiece.IsWhite)
-        //    {
-
-
-
-
-        //        foreach (var cell in tempolarCells)
-        //        {
-
-
-
-        //            if (chessPiece.diagonalUpperLeftValidCells.Count >= counter)
-        //            {
-
-        //                if (cell.HasPiece && cell.ChessPiece.IsWhite)
-        //                {
-        //                    chessPiece.diagonalUpperLeftValidCells.RemoveRange(counter, chessPiece.diagonalUpperLeftValidCells.Count - counter);
-        //                    counter++;
-        //                }
-        //            }
-        //            else break;
-        //            counter++;
-
-
-        //        }
-
-
-
-
-        //        tempolarCells = new List<ChessCells>(chessPiece.diagonalUpperRightValidCells);
-
-        //        tempolarCells.Sort(comparerI);
-        //        chessPiece.diagonalUpperRightValidCells.Sort(comparerI);
-
-        //        counter = 0;
-
-        //        foreach (var cell in tempolarCells)
-        //        {
-
-
-
-
-        //            if (chessPiece.diagonalUpperRightValidCells.Count >= counter)
-        //            {
-        //                if (cell.HasPiece && cell.ChessPiece.IsWhite)
-        //                {
-        //                    chessPiece.diagonalUpperRightValidCells.RemoveRange(counter, chessPiece.diagonalUpperRightValidCells.Count - counter);
-        //                    counter++;
-        //                }
-        //            }
-        //            else break;
-
-        //            counter++;
-        //        }
-
-        //        tempolarCells = new List<ChessCells>(chessPiece.diagonalLowerLeftValidCells);
-
-
-        //        tempolarCells.Sort((x, y) => x.I.CompareTo(y.I));
-        //        chessPiece.diagonalLowerLeftValidCells.Sort((x, y) => x.I.CompareTo(y.I));
-
-
-        //        counter = 0;
-
-        //        foreach (var cell in tempolarCells)
-        //        {
-
-
-
-
-        //            if (chessPiece.diagonalLowerLeftValidCells.Count >= counter)
-        //            {
-        //                if (cell.HasPiece && cell.ChessPiece.IsWhite)
-        //                {
-        //                    chessPiece.diagonalLowerLeftValidCells.RemoveRange(counter, chessPiece.diagonalLowerLeftValidCells.Count - counter);
-
-        //                }
-        //            }
-        //            else break;
-        //            counter++;
-        //        }
-
-
-
-        //    }
-
-        //    tempolarCells = new List<ChessCells>(chessPiece.diagonalLowerRightValidCells);
-
-        //    tempolarCells.Sort((x, y) => x.I.CompareTo(y.I));
-        //    chessPiece.diagonalLowerRightValidCells.Sort((x, y) => x.I.CompareTo(y.I));
-        //    counter = 0;
-
-        //    foreach (var cell in tempolarCells)
-        //    {
-
-
-
-
-        //        if (chessPiece.diagonalLowerRightValidCells.Count >= counter)
-        //        {
-        //            if (cell.HasPiece && cell.ChessPiece.IsWhite)
-        //            {
-        //                chessPiece.diagonalLowerRightValidCells.RemoveRange(counter, chessPiece.diagonalLowerRightValidCells.Count - counter);
-
-        //            }
-        //        }
-        //        else break;
-        //        counter++;
-
-
-
-        //    }
-
-        //}
-        protected static void ProcessPiecesOnTheWay(Queen chessPiece, List<ChessCells> list)
-        {
-            bool isRangeOFCellAlreadyRemoved = false;
+            bool isRangeOFCellAlreadyRemoved;
             ComparerI comparerI = new ComparerI();
-            ComparerJ comparerJ = new ComparerJ();
+            //ComparerJ comparerJ = new ComparerJ();
             List<ChessCells> tempolarCells = new List<ChessCells>(list);
-            var cock = chessPiece.diagonalLowerLeftValidCells;
+
             if (list == chessPiece.straightUpLineValidCells || list == chessPiece.straightLeftLineValidCells || list == chessPiece.diagonalUpperLeftValidCells || list == chessPiece.diagonalUpperRightValidCells)
             {
                 tempolarCells.Sort(comparerI);
@@ -398,15 +262,8 @@ namespace chess
 
 
             }
-            //else
-            //{
-            //    tempolarCells.Sort((x, y) => x.J.CompareTo(y.J));
-            //     list.Sort((x, y) => x.J.CompareTo(y.J));
-            //}
 
-
-
-            if (chessPiece.IsWhite && list.Count != 0)
+            if (list.Count != 0)
             {
 
 
@@ -419,27 +276,53 @@ namespace chess
                     {
                         if (list.Count != 0 && cell.HasPiece)
                         {
-
-                            if (cell.ChessPiece.IsWhite)
+                            if (chessPiece.IsWhite)
                             {
-                                var currentCellIndex = list.IndexOf(cell);
-                                list.RemoveRange(currentCellIndex, list.Count - currentCellIndex);
-
-                            }
-                            if (!cell.ChessPiece.IsWhite)
-                            {
-                                int cellIndex;
-
-                                if (list.IndexOf(cell) + 1! <= list.Count)
+                                if (cell.ChessPiece.IsWhite)
                                 {
-                                    cellIndex = list.IndexOf(cell) + 1;
+                                    var currentCellIndex = list.IndexOf(cell);
+                                    list.RemoveRange(currentCellIndex, list.Count - currentCellIndex);
+
                                 }
-                                else cellIndex = list.IndexOf(cell);
+                                if (!cell.ChessPiece.IsWhite)
+                                {
+                                    int cellIndex;
+
+                                    if (list.IndexOf(cell) + 1! <= list.Count)
+                                    {
+                                        cellIndex = list.IndexOf(cell) + 1;
+                                    }
+                                    else cellIndex = list.IndexOf(cell);
 
 
-                                list.RemoveRange(cellIndex, list.Count - cellIndex);
+                                    list.RemoveRange(cellIndex, list.Count - cellIndex);
 
+                                }
                             }
+                            else
+                            {
+                                if (!cell.ChessPiece.IsWhite)
+                                {
+                                    var currentCellIndex = list.IndexOf(cell);
+                                    list.RemoveRange(currentCellIndex, list.Count - currentCellIndex);
+
+                                }
+                                if (cell.ChessPiece.IsWhite)
+                                {
+                                    int cellIndex;
+
+                                    if (list.IndexOf(cell) + 1! <= list.Count)
+                                    {
+                                        cellIndex = list.IndexOf(cell) + 1;
+                                    }
+                                    else cellIndex = list.IndexOf(cell);
+
+
+                                    list.RemoveRange(cellIndex, list.Count - cellIndex);
+
+                                }
+                            }
+
 
                             isRangeOFCellAlreadyRemoved = true;
 
@@ -452,7 +335,10 @@ namespace chess
                 }
 
             }
+            MergeVallidCellsArray(chessPiece);
         }
+
+
         protected static void SortThroughCellLists(Queen chessPiece)
         {
             var allListOfValidCells = GetAllListFields(chessPiece);
