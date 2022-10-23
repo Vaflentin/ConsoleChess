@@ -14,7 +14,8 @@ namespace chess
         InvalidSquare, 
         CellDoesNotContainSuchPiece,
         WrongCommand,
-        WrongKey
+        WrongKey,
+        NoAnyLegalMove
 
     }
    

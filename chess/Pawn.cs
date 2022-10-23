@@ -8,13 +8,79 @@ namespace chess
 {
     class Pawn : ChessPiece
     {
-
+        private List<ChessCells> _attackingCells = new List<ChessCells>();
 
         public Pawn(int i, int j, string pieceName, bool isWhite) : base(i, j, pieceName, isWhite)
         {
 
         }
    
+
+       public void ProduceAttackCells()
+        {
+          
+            ChessCells leftAttackedCell;
+            ChessCells rightAttackedCell;
+
+
+            _attackingCells.Clear();
+
+                 if (IsWhite && I - 1 > 0)
+                    {
+
+                       
+                            if (J - 1 >= 0)
+                            {
+                                leftAttackedCell = ChessTable.GetChessCell(I - 1, J - 1);
+                                _attackingCells.Add(leftAttackedCell);
+
+                            }
+
+                            if (J + 1 < 8)
+                            {
+                                rightAttackedCell = ChessTable.GetChessCell(I - 1, J + 1);
+
+                                _attackingCells.Add(rightAttackedCell);
+                            }
+                     
+
+                    }
+
+                    if (!IsWhite && I + 1 < 7)
+
+                    {
+                               
+                                            if (J - 1 >= 0)
+                                            {
+                                                leftAttackedCell = ChessTable.GetChessCell(I + 1, J - 1);
+                                                _attackingCells.Add(leftAttackedCell);
+                                            }
+                                            if (J + 1 < 8)
+                                            {
+                                                rightAttackedCell = ChessTable.GetChessCell(I + 1, J + 1);
+
+                                                _attackingCells.Add(rightAttackedCell);
+                                            }
+
+
+                    }
+
+
+                    foreach (var cell in _attackingCells)
+                    {
+                        if (cell.HasPiece)
+                        {
+                            VallidCells.Add(cell);
+                            AttactedEnemies.Add(cell.ChessPiece);
+
+                        }
+
+                    }
+
+                        
+      
+
+        }
 
         public override void CheckPiecesOnTheWay(ChessPiece chessPiece) // todo: Надо зарефакторить
         {
@@ -29,13 +95,14 @@ namespace chess
                     pawn.VallidCells.Remove(cell);
                 }
             }
-           
+            pawn.ProduceAttackCells();
         }
 
         public override void ProduceValidCells(ChessPiece pawn)
         {
+            ComparerI comparer = new ComparerI();
             var currentPawn = (Pawn)pawn;
-            currentPawn.validCells.Clear();
+            currentPawn._validCells.Clear();
             int pawnDirection;
 
             if (!IsWhite)
@@ -47,11 +114,19 @@ namespace chess
                 pawnDirection = 1; // pawn goes up 
             }
 
-                 currentPawn.validCells.Add(ChessTable.GetChessCell(currentPawn.I - pawnDirection*2, currentPawn.J));
-                 currentPawn.validCells.Add(ChessTable.GetChessCell(currentPawn.I - pawnDirection, currentPawn.J));
             
+                 currentPawn._validCells.Add(ChessTable.GetChessCell(currentPawn.I - pawnDirection*2, currentPawn.J));
+                 currentPawn._validCells.Add(ChessTable.GetChessCell(currentPawn.I - pawnDirection, currentPawn.J));
+
+            if (!currentPawn.IsWhite)
+            {
+                currentPawn.VallidCells.Sort(comparer);
+
+            }
+       
             if (!currentPawn._isFirstMove)
             {
+        
                 currentPawn.VallidCells.Remove(currentPawn.VallidCells[0]);
             }
         }

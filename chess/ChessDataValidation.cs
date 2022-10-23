@@ -10,6 +10,42 @@ namespace chess
 {
     public static class ChessDataValidation
     {
+        public static Errors ValidateSquares(ChessPiece chessPiece, int i, int j)
+        {
+
+            if (!CheckValidCellMatch(i, j, chessPiece.VallidCells))
+            {
+                return Errors.InvalidSquare;
+            }
+
+            return Errors.NoErrors;
+        }
+
+        public static void ChechIsMoveAvailble(ChessPiece chessPiece, int i, int j)
+        {
+            if (ValidateSquares(chessPiece, i, j) == Errors.NoErrors)
+            {
+                chessPiece.Move(chessPiece, i, j);
+               
+            }
+            else
+            {
+                ChessMessages.OutPutErrorMessages(Errors.InvalidSquare);
+            }
+        }
+
+        public static bool CheckValidCellMatch(int i, int j, List<ChessCells> validCells)
+        {
+
+            foreach (ChessCells cell in validCells)
+            {
+                if (cell.I == i && cell.J == j)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public static void CheckIsPieceChosen(string userCommand)
         {
           
@@ -23,20 +59,33 @@ namespace chess
                 var i = Convert.ToInt32(userCommand[0].ToString());
                 var j = Convert.ToInt32(userCommand[1].ToString());
                 var pieceName = userCommand[2].ToString();
+                Errors error = ChessPiece.SelectPiece(i, j, pieceName);
                 //var currentFakeChessTable = ChessOutPut.GetFakeChessTable();
                 //var currentCell = currentFakeChessTable[i + 1, j + 1];
 
-                if (ChessPiece.SelectPiece(i, j,pieceName) == Errors.NoErrors)
+                switch (error)
                 {
-                    ChessOutPut.DisableHighLighting();
-                    ChessCommand.ProcessPieceMovementCommand(userCommand, currentPiece);
+                    case Errors.NoErrors:
+                        {
+                            ChessOutPut.DisableHighLighting();
+                            ChessCommand.ProcessPieceMovementCommand(userCommand, currentPiece);
+                        }
+                        break;
 
+                    case Errors.CellDoesNotContainSuchPiece:
+                        {
+                            ChessMessages.OutPutErrorMessages(Errors.CellDoesNotContainSuchPiece);
+                        }
+                        break;
+                    case Errors.NoAnyLegalMove:
+                        {
+                            ChessOutPut.DisableHighLighting();
+                            ChessCommand.ProcessPieceMovementCommand(userCommand, currentPiece);
+                        }
+                        break;
+         
                 }
-            
-                else
-                {
-                    ChessMessages.OutPutErrorMessages(Errors.CellDoesNotContainSuchPiece);
-                }
+             
             }
 
 
@@ -58,14 +107,36 @@ namespace chess
         }
 
 
+        //public static void AddEnemiesToCapture(ChessPiece chessPiece)
+        //{
+        //    chessPiece.VallidCells.AddRange((IEnumerable<ChessCells>)chessPiece.AttactedEnemies);
 
-        private static Errors IsSquareTaken(int i, int j)
+        //    //foreach (var piece in chessPiece.AttactedEnemies)
+        //    //{
+        //    //    if (piece.I == i && piece.J == j)
+        //    //    {
+        //    //        return Errors.NoErrors;
+        //    //    }
+        //    //}
+
+        //    //return Errors.InvalidSquare;
+        //}
+
+        public static void IsSquareTakenByAlly(ChessPiece chessPiece,int i, int j)
         {
-            if (!ChessCells.GetCellCondition(i, (int)j))
+            var cell = ChessTable.GetChessCell(i, j);
+    
+            if (cell.HasPiece)
             {
-                return Errors.NoErrors;
+                var supAlly = cell.ChessPiece;
+
+                if (chessPiece.IsWhite && supAlly.IsWhite || !chessPiece.IsWhite && !supAlly.IsWhite)
+                {
+                    ChessMessages.OutPutErrorMessages(Errors.ChessSquareAlreadyTaken);
+                }
             }
-            return Errors.ChessSquareAlreadyTaken;
+            
+     
         }
 
         public static Errors CheckFormatFalidation(string playersPiece)
@@ -81,10 +152,10 @@ namespace chess
                     var j = Convert.ToInt32(convertedCoordinates[1].ToString());
 
 
-                    return IsSquareTaken(i, (int)j);
+                    return Errors.NoErrors;
                 }
 
-                return Errors.InvalidSquare;
+                return Errors.InvalidFormat;
             }
             catch (Exception)
             {

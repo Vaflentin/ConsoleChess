@@ -97,9 +97,6 @@ namespace chess
             ValidateAndParseToUserCommands(userCommand);
             ProcessUsersCommand(currentCommand);
 
-
-
-
         }
 
         public static void ProcessFreeModeCommands()
@@ -195,11 +192,11 @@ namespace chess
 
 
                         i = Convert.ToInt32(newCoordinates[0].ToString());
-                        var newJ = Convert.ToInt32(newCoordinates[1].ToString());
+                        j = Convert.ToInt32(newCoordinates[1].ToString());
 
+                        ChessDataValidation.IsSquareTakenByAlly(chessPiece, i, j);
+                        ChessDataValidation.ChechIsMoveAvailble(chessPiece, i, j);
 
-                        chessPiece.Move(chessPiece, i, newJ);
-                       
 
                         ChessOutPut.DisableHighLighting();
 
@@ -222,8 +219,8 @@ namespace chess
                         newCoordinates = ChessDataValidation.ConvertCoordinates(newCoordinates);
                         i = Convert.ToInt32(newCoordinates[0].ToString());
 
-                        var newJ = Convert.ToInt32(newCoordinates[1].ToString());
-                        chessPiece.Replace(chessPiece, i, newJ);
+                        j = Convert.ToInt32(newCoordinates[1].ToString());
+                        chessPiece.Move(chessPiece, i, j);
 
                         InitializeUsersCommands();
                     }
@@ -235,9 +232,6 @@ namespace chess
                         ProcessBackCommand();
                     }
                     break;
-
-
-
 
 
 
@@ -256,7 +250,7 @@ namespace chess
         }
 
 
-        private static void ProcessBackCommand()
+       public static void ProcessBackCommand()
         {
        
             if (previousCommand == UserCommands.fm || previousCommand == UserCommands.ng || previousCommand == UserCommands.start ||

@@ -14,7 +14,7 @@ namespace chess
         private const string INVALID_SQUARE = "Invalid Square";
         private const string CELL_DOES_NOT_CONTAIN_SUCH_PIECE = "The selected cell doesn't contains such a piece";
         private const string WRONG_KEY_WAS_PRESSED = "The wrong key was pressed";
-
+        private const string NO_ANY_LEGAL_MOVES = "There is not a single legal move";
 
         public static void OutPutWrongCommandMessage()
         {
@@ -25,7 +25,7 @@ namespace chess
             ChessCommand.InitializeUsersCommands();
         }
 
-
+      
         public static void OutPutDeletionMessage()
         {
             Console.Clear();
@@ -121,7 +121,7 @@ namespace chess
 
                         Console.ResetColor();
 
-                        OutPutMakingPieceMessage();
+                        ChessCommand.ProcessBackCommand();
 
                     }
 
@@ -136,8 +136,8 @@ namespace chess
                         Console.ReadKey();
 
                         Console.ResetColor();
+                        ChessCommand.ProcessBackCommand();
 
-                        OutPutMakingPieceMessage();
                     }
 
                     break;
@@ -150,7 +150,7 @@ namespace chess
                         Console.ReadKey();
 
                         Console.ResetColor();
-                        ChessCommand.InitializeUsersCommands();
+                               ChessCommand.ProcessBackCommand();
                     }
 
 
@@ -165,7 +165,7 @@ namespace chess
                         Console.ReadKey();
 
                         Console.ResetColor();
-                        ChessCommand.InitializeUsersCommands();
+                        ChessCommand.ProcessBackCommand();
                     }
                     break;
 
@@ -177,13 +177,27 @@ namespace chess
                         Console.ReadKey();
 
                         Console.ResetColor();
-
+                        ChessCommand.ProcessBackCommand();
                     }
                     break;
+
+                //case Errors.NoAnyLegalMove:
+                //    {
+                //        Console.ForegroundColor = ConsoleColor.Yellow;
+                //        Console.WriteLine(NO_ANY_LEGAL_MOVES);
+                //        Console.WriteLine("Press any key to try again");
+                //        Console.ReadKey();
+
+                //        Console.ResetColor();
+
+                //        ChessCommand.InitializeUsersCommands();
+                //    }
+                //    break;
 
                 default:
 
                     Console.WriteLine(UNKNOWN_EXCEPTION);
+                    ChessCommand.ProcessBackCommand();
 
                     break;
             }

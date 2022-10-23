@@ -30,20 +30,33 @@ namespace chess
 
             foreach (var cell in tempolarList)
             {
-                if (chessPiece.IsWhite)
-                {
-                    if (cell.HasPiece && cell.ChessPiece.IsWhite)
+               
+                    if (cell.HasPiece)
                     {
-                        chessPiece.VallidCells.Remove(cell);
+                        if (chessPiece.IsWhite)
+                        {
+                            if (cell.ChessPiece.IsWhite)
+                            {
+                                chessPiece.ProtectedAllies.Add(cell.ChessPiece);
+                                chessPiece.VallidCells.Remove(cell);
+                            }
+                            else
+                                chessPiece.AttactedEnemies.Add(cell.ChessPiece);
+
+                         }
+
+                        if (!chessPiece.IsWhite)
+                        {
+                            if (!cell.ChessPiece.IsWhite)
+                            {
+                                chessPiece.ProtectedAllies.Add(cell.ChessPiece);
+                                chessPiece.VallidCells.Remove(cell);
+                            }
+                            else
+                                chessPiece.AttactedEnemies.Add(cell.ChessPiece);
+
+                        }   
                     }
-                }
-                if (!chessPiece.IsWhite)
-                {
-                    if (cell.HasPiece && !cell.ChessPiece.IsWhite)
-                    {
-                        chessPiece.VallidCells.Remove(cell);
-                    }
-                }
 
             }
         }

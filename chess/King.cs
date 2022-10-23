@@ -14,22 +14,28 @@ namespace chess
 
         }
 
-        public override void CheckPiecesOnTheWay(ChessPiece chessPiece)
+        public override void CheckPiecesOnTheWay(ChessPiece chessPiece) // todo:: рефакторить
         {
             List<ChessCells> tempolarCells = new List<ChessCells>(chessPiece.VallidCells);
+
             foreach (var cell in tempolarCells)
             {
+
                 if (cell.HasPiece)
                 {
                     if (chessPiece.IsWhite && cell.ChessPiece.IsWhite)
                     {
+                        chessPiece.ProtectedAllies.Add(cell.ChessPiece);
                         chessPiece.VallidCells.Remove(cell);
                     }
+                    else chessPiece.AttactedEnemies.Add(cell.ChessPiece);
 
-                  if (!chessPiece.IsWhite && !cell.ChessPiece.IsWhite)
+                    if (!chessPiece.IsWhite && !cell.ChessPiece.IsWhite)
                     {
+                        chessPiece.ProtectedAllies.Add(cell.ChessPiece);
                         chessPiece.VallidCells.Remove(cell);
                     }
+                    else chessPiece.AttactedEnemies.Add(cell.ChessPiece);
                 }
             }
           
@@ -38,7 +44,7 @@ namespace chess
         public override void ProduceValidCells(ChessPiece king)
         {
             King currentKing = (King)king;
-            currentKing.validCells.Clear();
+            currentKing._validCells.Clear();
 
             for (int i = currentKing.I - 1; i <= currentKing.I + 1; i++)
             {
@@ -47,7 +53,7 @@ namespace chess
                     if ((i < 8 && i >= 0) && (j < 8 && j >= 0))
                     {
            
-                        currentKing.validCells.Add(ChessTable.GetChessCell(i, j));
+                        currentKing._validCells.Add(ChessTable.GetChessCell(i, j));
                     }
 
 

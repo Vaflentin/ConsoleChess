@@ -26,7 +26,7 @@ namespace chess
 
         }
 
-
+     
         protected void ProduceDiagonalCells()
         {
             diagonalLowerLeftValidCells.Clear();
@@ -280,6 +280,7 @@ namespace chess
                             {
                                 if (cell.ChessPiece.IsWhite)
                                 {
+                                    chessPiece._protectedAllies.Add(cell.ChessPiece);
                                     var currentCellIndex = list.IndexOf(cell);
                                     list.RemoveRange(currentCellIndex, list.Count - currentCellIndex);
 
@@ -296,13 +297,14 @@ namespace chess
 
 
                                     list.RemoveRange(cellIndex, list.Count - cellIndex);
-
+                                    chessPiece._attactedEnemies.Add(cell.ChessPiece);
                                 }
                             }
                             else
                             {
                                 if (!cell.ChessPiece.IsWhite)
                                 {
+                                    chessPiece._protectedAllies.Add(cell.ChessPiece);
                                     var currentCellIndex = list.IndexOf(cell);
                                     list.RemoveRange(currentCellIndex, list.Count - currentCellIndex);
 
@@ -316,7 +318,7 @@ namespace chess
                                         cellIndex = list.IndexOf(cell) + 1;
                                     }
                                     else cellIndex = list.IndexOf(cell);
-
+                                    chessPiece._attactedEnemies.Add(cell.ChessPiece);
 
                                     list.RemoveRange(cellIndex, list.Count - cellIndex);
 
