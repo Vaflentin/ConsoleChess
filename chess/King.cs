@@ -6,36 +6,89 @@ using System.Threading.Tasks;
 
 namespace chess
 {
-    class King : ChessPiece 
+    class King : Queen
     {
-
+        List<ChessCells> SuspiciousChecksCells { get; set; }
+        private bool _isChecked;
         public King(int i, int j, string pieceName, bool isWhite) : base(i, j, pieceName, isWhite)
         {
 
         }
-
-        public override void CheckPiecesOnTheWay(ChessPiece chessPiece) // todo:: рефакторить
+        private void CheckIsKingUnderAttack()
         {
-            List<ChessCells> tempolarCells = new List<ChessCells>(chessPiece.VallidCells);
+            ProduceDiagonalCells();
+            ProduceStraightCells();
+
+            MergeVallidCellsArray(
+                SuspiciousChecksCells,
+                diagonalLowerLeftValidCells, 
+                diagonalLowerRightValidCells, 
+                diagonalUpperLeftValidCells,
+                diagonalUpperRightValidCells,
+                straightDownLineValidCells,  
+                straightLeftLineValidCells, 
+                straightRightLineValidCells, 
+                straightUpLineValidCells
+                );
+    
+        }
+
+        protected override void SortThroughCellLists()
+        {
+            var allListOfValidCells = GetAllListFields();
+
+            foreach (var list in allListOfValidCells)
+            {
+                ProccessSuspiciousCells(list);
+            }
+        }
+
+        private void ProccessSuspiciousCells(List<ChessCells> currentList)
+        {
+            ComparerI comparerI = new ComparerI();
+
+            if (currentList == straightUpLineValidCells || currentList == straightLeftLineValidCells 
+                || currentList == diagonalUpperLeftValidCells || currentList == diagonalUpperRightValidCells)
+            {
+                currentList.Sort(comparerI);
+            }
+
+            foreach (var cell in currentList)
+            {
+
+                if (cell.HasPiece && cell.ChessPiece.GetType() != typeof(Knight))
+                {
+                    if (IsWhite && !cell.ChessPiece.IsWhite)
+                    {
+                        //cell.ChessPiece.ProduceValidCells();
+                    }
+                }
+           
+            }
+
+        }
+        public override void CheckPiecesOnTheWay() // todo:: рефакторить
+        {
+            List<ChessCells> tempolarCells = new List<ChessCells>(VallidCells);
 
             foreach (var cell in tempolarCells)
             {
 
                 if (cell.HasPiece)
                 {
-                    if (chessPiece.IsWhite && cell.ChessPiece.IsWhite)
+                    if (IsWhite && cell.ChessPiece.IsWhite)
                     {
-                        chessPiece.ProtectedAllies.Add(cell.ChessPiece);
-                        chessPiece.VallidCells.Remove(cell);
+                        ProtectedAllies.Add(cell.ChessPiece);
+                        VallidCells.Remove(cell);
                     }
-                    else chessPiece.AttactedEnemies.Add(cell.ChessPiece);
+                    else AttactedEnemies.Add(cell.ChessPiece);
 
-                    if (!chessPiece.IsWhite && !cell.ChessPiece.IsWhite)
+                    if (!IsWhite && !cell.ChessPiece.IsWhite)
                     {
-                        chessPiece.ProtectedAllies.Add(cell.ChessPiece);
-                        chessPiece.VallidCells.Remove(cell);
+                        ProtectedAllies.Add(cell.ChessPiece);
+                        VallidCells.Remove(cell);
                     }
-                    else chessPiece.AttactedEnemies.Add(cell.ChessPiece);
+                    else AttactedEnemies.Add(cell.ChessPiece);
                 }
             }
           

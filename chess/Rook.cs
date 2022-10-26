@@ -22,7 +22,7 @@ namespace chess
             currentRook.ProduceStraightCells();
             //currentRook.CheckPiecesOnTheWay(currentRook);
           
-            MergeVallidCellsArray(currentRook);
+            MergeVallidCellsArray();
             DeleteInvalidCellsFromList(currentRook);
         }
 

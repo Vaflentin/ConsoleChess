@@ -35,9 +35,9 @@ namespace chess
             bishop.VallidCells.Clear();
             Bishop currentBishop = (Bishop)bishop;
             currentBishop.ProduceDiagonalCells();
-            currentBishop.CheckPiecesOnTheWay(currentBishop);
+            currentBishop.CheckPiecesOnTheWay();
             //CheckAlliesOnDiagonalyLines((currentBishop));
-            MergeVallidCellsArray(currentBishop);
+            MergeVallidCellsArray();
             DeleteInvalidCellsFromList(bishop);
         }
     }

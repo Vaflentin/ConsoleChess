@@ -82,20 +82,20 @@ namespace chess
 
         }
 
-        public override void CheckPiecesOnTheWay(ChessPiece chessPiece) // todo: Надо зарефакторить
+        public override void CheckPiecesOnTheWay() // todo: Надо зарефакторить
         {
-            Pawn pawn = (Pawn)chessPiece;
+          
 
-            List<ChessCells> tempolarValidCell = new List<ChessCells>(pawn.VallidCells);
+            List<ChessCells> tempolarValidCell = new List<ChessCells>(VallidCells);
 
             foreach (var cell in tempolarValidCell)
             {
                 if (cell.HasPiece)
                 {
-                    pawn.VallidCells.Remove(cell);
+                    VallidCells.Remove(cell);
                 }
             }
-            pawn.ProduceAttackCells();
+           ProduceAttackCells();
         }
 
         public override void ProduceValidCells(ChessPiece pawn)

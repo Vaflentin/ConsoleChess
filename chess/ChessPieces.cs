@@ -46,7 +46,7 @@ namespace chess
         protected bool _isFirstMove = true;
 
 
-        abstract public void CheckPiecesOnTheWay(ChessPiece chessPiece);
+        abstract public void CheckPiecesOnTheWay();
 
       
         public void Capture(ChessPiece chessPiece, int i, int j)
@@ -75,16 +75,16 @@ namespace chess
         }
 
 
-        protected static List<List<ChessCells>> GetAllListFields(ChessPiece chessPiece)
+        protected List<List<ChessCells>> GetAllListFields()
         {
-            var listFields =  chessPiece.GetType().GetFields(BindingFlags.Instance| BindingFlags.NonPublic );
+            var listFields = GetType().GetFields(BindingFlags.Instance| BindingFlags.NonPublic );
             List<List<ChessCells>> allCellLists = new List<List<ChessCells>>();
   
             foreach (var field in listFields)
             {
-                   if (field.FieldType.IsGenericType && field.Name != "VallidCells" && field.Name != "vallidCells" && field.GetValue(chessPiece) is List<ChessCells>)
+                   if (field.FieldType.IsGenericType && field.Name != "VallidCells" && field.Name != "vallidCells" && field.GetValue(this) is List<ChessCells>)
                 {
-                    var currentList = (List <ChessCells>)field.GetValue(chessPiece);
+                    var currentList = (List <ChessCells>)field.GetValue(this);
                     allCellLists.Add(currentList);
                 }
             }
@@ -129,7 +129,7 @@ namespace chess
             if (chessCell.HasPiece && chessCell.ChessPiece.PieceName == pieceName)
             {
                 piece.ProduceValidCells(piece);
-                piece.CheckPiecesOnTheWay(piece);
+                piece.CheckPiecesOnTheWay();
                 if (piece.VallidCells.Count == 0)
                 {
                     return Errors.NoAnyLegalMove;

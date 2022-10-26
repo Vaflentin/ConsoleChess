@@ -14,7 +14,7 @@ namespace chess
         protected List<ChessCells> diagonalLowerLeftValidCells = new List<ChessCells>();
         protected List<ChessCells> diagonalLowerRightValidCells = new List<ChessCells>();
 
-        protected List<ChessCells> straightValidCells = new List<ChessCells>();
+        //protected List<ChessCells> straightValidCells = new List<ChessCells>();
 
         protected List<ChessCells> straightUpLineValidCells = new List<ChessCells>();
         protected List<ChessCells> straightDownLineValidCells = new List<ChessCells>();
@@ -139,22 +139,22 @@ namespace chess
         }
 
 
-        public static void MergeVallidCellsArray(Queen chessPiece)
+        public void MergeVallidCellsArray()
         {
-            chessPiece.VallidCells.Clear();
+          VallidCells.Clear();
 
 
-            var fields = chessPiece.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
+            var fields = GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
 
             foreach (var member in fields)
             {
 
-                if ( member.GetValue(chessPiece) is IList<ChessCells>)
+                if ( member.GetValue(this) is IList<ChessCells>)
                 {
-                    var memberValue = member.GetValue(chessPiece);
+                    var memberValue = member.GetValue(this);
                     List<ChessCells> currentList = (List<ChessCells>)memberValue;
 
-                    chessPiece.VallidCells.AddRange(currentList);
+                   VallidCells.AddRange(currentList);
                 }
              
 
@@ -163,15 +163,15 @@ namespace chess
 
 
         }
-        public static void MergeVallidCellsArray(ChessPiece chessPiece, params List<ChessCells>[] Lists)
+        public void MergeVallidCellsArray(List<ChessCells> baseCellList ,params List<ChessCells>[] Lists)
         {
-            chessPiece.VallidCells.Clear();
+           baseCellList.Clear();
 
 
 
             for (int i = 0; i < Lists.Length; i++)
             {
-                chessPiece.VallidCells.AddRange(Lists[i]);
+              baseCellList.AddRange(Lists[i]);
             }
 
 
@@ -238,9 +238,9 @@ namespace chess
             currentQueen.ProduceDiagonalCells();
             currentQueen.ProduceStraightCells();
 
-            //CheckPiecesOnTheWay(currentQueen);
+            CheckPiecesOnTheWay();
 
-   
+
 
         }
 
@@ -248,14 +248,14 @@ namespace chess
 
 
 
-        protected static void ProcessPiecesOnTheWay(Queen chessPiece, List<ChessCells> list) // todo:: Надо зарефакторить - упростить код
+        protected  void ProcessPiecesOnTheWay(List<ChessCells> list) // todo:: Надо зарефакторить - упростить код
         {
             bool isRangeOFCellAlreadyRemoved;
             ComparerI comparerI = new ComparerI();
             //ComparerJ comparerJ = new ComparerJ();
             List<ChessCells> tempolarCells = new List<ChessCells>(list);
 
-            if (list == chessPiece.straightUpLineValidCells || list == chessPiece.straightLeftLineValidCells || list == chessPiece.diagonalUpperLeftValidCells || list == chessPiece.diagonalUpperRightValidCells)
+            if (list == straightUpLineValidCells || list == straightLeftLineValidCells || list == diagonalUpperLeftValidCells || list == diagonalUpperRightValidCells)
             {
                 tempolarCells.Sort(comparerI);
                 list.Sort(comparerI);
@@ -276,11 +276,11 @@ namespace chess
                     {
                         if (list.Count != 0 && cell.HasPiece)
                         {
-                            if (chessPiece.IsWhite)
+                            if (IsWhite)
                             {
                                 if (cell.ChessPiece.IsWhite)
                                 {
-                                    chessPiece._protectedAllies.Add(cell.ChessPiece);
+                                    _protectedAllies.Add(cell.ChessPiece);
                                     var currentCellIndex = list.IndexOf(cell);
                                     list.RemoveRange(currentCellIndex, list.Count - currentCellIndex);
 
@@ -297,14 +297,14 @@ namespace chess
 
 
                                     list.RemoveRange(cellIndex, list.Count - cellIndex);
-                                    chessPiece._attactedEnemies.Add(cell.ChessPiece);
+                                   _attactedEnemies.Add(cell.ChessPiece);
                                 }
                             }
                             else
                             {
                                 if (!cell.ChessPiece.IsWhite)
                                 {
-                                    chessPiece._protectedAllies.Add(cell.ChessPiece);
+                                  _protectedAllies.Add(cell.ChessPiece);
                                     var currentCellIndex = list.IndexOf(cell);
                                     list.RemoveRange(currentCellIndex, list.Count - currentCellIndex);
 
@@ -318,7 +318,7 @@ namespace chess
                                         cellIndex = list.IndexOf(cell) + 1;
                                     }
                                     else cellIndex = list.IndexOf(cell);
-                                    chessPiece._attactedEnemies.Add(cell.ChessPiece);
+                                    _attactedEnemies.Add(cell.ChessPiece);
 
                                     list.RemoveRange(cellIndex, list.Count - cellIndex);
 
@@ -337,24 +337,24 @@ namespace chess
                 }
 
             }
-            MergeVallidCellsArray(chessPiece);
+            MergeVallidCellsArray();
         }
 
 
-        protected static void SortThroughCellLists(Queen chessPiece)
+        protected virtual void SortThroughCellLists()
         {
-            var allListOfValidCells = GetAllListFields(chessPiece);
+            var allListOfValidCells = GetAllListFields();
 
             foreach (var list in allListOfValidCells)
             {
-                ProcessPiecesOnTheWay(chessPiece, list);
+                ProcessPiecesOnTheWay(list);
             }
 
         }
-        public override void CheckPiecesOnTheWay(ChessPiece chessPiece)
+        public override void CheckPiecesOnTheWay()
         {
 
-            SortThroughCellLists((Queen)chessPiece);
+            SortThroughCellLists();
 
         }
     }

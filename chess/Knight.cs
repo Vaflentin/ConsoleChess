@@ -24,36 +24,36 @@ namespace chess
 
         }
 
-        public override void CheckPiecesOnTheWay(ChessPiece chessPiece) // todo: зарефакторить с королем
+        public override void CheckPiecesOnTheWay() // todo: зарефакторить с королем
         {
-            List<ChessCells> tempolarList = new List<ChessCells>(chessPiece.VallidCells);
+            List<ChessCells> tempolarList = new List<ChessCells>(VallidCells);
 
             foreach (var cell in tempolarList)
             {
                
                     if (cell.HasPiece)
                     {
-                        if (chessPiece.IsWhite)
+                        if (IsWhite)
                         {
                             if (cell.ChessPiece.IsWhite)
                             {
-                                chessPiece.ProtectedAllies.Add(cell.ChessPiece);
-                                chessPiece.VallidCells.Remove(cell);
+                               ProtectedAllies.Add(cell.ChessPiece);
+                               VallidCells.Remove(cell);
                             }
                             else
-                                chessPiece.AttactedEnemies.Add(cell.ChessPiece);
+                                AttactedEnemies.Add(cell.ChessPiece);
 
                          }
 
-                        if (!chessPiece.IsWhite)
+                        if (!IsWhite)
                         {
                             if (!cell.ChessPiece.IsWhite)
                             {
-                                chessPiece.ProtectedAllies.Add(cell.ChessPiece);
-                                chessPiece.VallidCells.Remove(cell);
+                               ProtectedAllies.Add(cell.ChessPiece);
+                               VallidCells.Remove(cell);
                             }
                             else
-                                chessPiece.AttactedEnemies.Add(cell.ChessPiece);
+                                AttactedEnemies.Add(cell.ChessPiece);
 
                         }   
                     }
