@@ -98,11 +98,11 @@ namespace chess
            ProduceAttackCells();
         }
 
-        public override void ProduceValidCells(ChessPiece pawn)
+        public override void ProduceValidCells()
         {
             ComparerI comparer = new ComparerI();
-            var currentPawn = (Pawn)pawn;
-            currentPawn._validCells.Clear();
+
+           _validCells.Clear();
             int pawnDirection;
 
             if (!IsWhite)
@@ -115,19 +115,19 @@ namespace chess
             }
 
             
-                 currentPawn._validCells.Add(ChessTable.GetChessCell(currentPawn.I - pawnDirection*2, currentPawn.J));
-                 currentPawn._validCells.Add(ChessTable.GetChessCell(currentPawn.I - pawnDirection, currentPawn.J));
+                 _validCells.Add(ChessTable.GetChessCell(I - pawnDirection*2, J));
+                 _validCells.Add(ChessTable.GetChessCell(I - pawnDirection, J));
 
-            if (!currentPawn.IsWhite)
+            if (!IsWhite)
             {
-                currentPawn.VallidCells.Sort(comparer);
+                VallidCells.Sort(comparer);
 
             }
        
-            if (!currentPawn._isFirstMove)
+            if (!_isFirstMove)
             {
         
-                currentPawn.VallidCells.Remove(currentPawn.VallidCells[0]);
+                VallidCells.Remove(VallidCells[0]);
             }
         }
 

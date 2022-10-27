@@ -30,7 +30,8 @@ namespace chess
                 straightRightLineValidCells, 
                 straightUpLineValidCells
                 );
-    
+
+            SortThroughCellLists();
         }
 
         protected override void SortThroughCellLists()
@@ -47,26 +48,15 @@ namespace chess
         {
             ComparerI comparerI = new ComparerI();
 
-            if (currentList == straightUpLineValidCells || currentList == straightLeftLineValidCells 
+            if (currentList == straightUpLineValidCells || currentList == straightLeftLineValidCells
                 || currentList == diagonalUpperLeftValidCells || currentList == diagonalUpperRightValidCells)
             {
                 currentList.Sort(comparerI);
             }
 
-            foreach (var cell in currentList)
-            {
-
-                if (cell.HasPiece && cell.ChessPiece.GetType() != typeof(Knight))
-                {
-                    if (IsWhite && !cell.ChessPiece.IsWhite)
-                    {
-                        //cell.ChessPiece.ProduceValidCells();
-                    }
-                }
-           
-            }
-
+       
         }
+
         public override void CheckPiecesOnTheWay() // todo:: рефакторить
         {
             List<ChessCells> tempolarCells = new List<ChessCells>(VallidCells);
@@ -91,28 +81,29 @@ namespace chess
                     else AttactedEnemies.Add(cell.ChessPiece);
                 }
             }
-          
+
         }
 
-        public override void ProduceValidCells(ChessPiece king)
+        public override void ProduceValidCells()
         {
-            King currentKing = (King)king;
-            currentKing._validCells.Clear();
+  
+            _validCells.Clear();
 
-            for (int i = currentKing.I - 1; i <= currentKing.I + 1; i++)
+            for (int i = I - 1; i <= I + 1; i++)
             {
-                for (int j = currentKing.J - 1; j <= currentKing.J + 1; j++)
+                for (int j = J - 1; j <= J + 1; j++)
                 {
                     if ((i < 8 && i >= 0) && (j < 8 && j >= 0))
                     {
            
-                        currentKing._validCells.Add(ChessTable.GetChessCell(i, j));
+                        _validCells.Add(ChessTable.GetChessCell(i, j));
                     }
 
 
                 }
             }
-            DeleteInvalidCellsFromList(currentKing);
+            CheckIsKingUnderAttack();
+
         }
 
     }

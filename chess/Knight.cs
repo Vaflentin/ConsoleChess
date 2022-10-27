@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace chess
 {
@@ -60,63 +56,63 @@ namespace chess
 
             }
         }
-        private static void CheckKnightMovesValidation(Knight knight, KnightMoves knightMoves)
+        private void CheckKnightMovesValidation( KnightMoves knightMoves)
         {
             switch (knightMoves)
             {
                 case KnightMoves.UpperLeftTopCell:
 
-                    if ((knight.I - 2 >= 0 && knight.J - 1 >= 0))
+                    if ((I - 2 >= 0 && J - 1 >= 0))
                     {
-                        knight.VallidCells.Add(ChessTable.GetChessCell(knight.I - 2, knight.J - 1));
+                        VallidCells.Add(ChessTable.GetChessCell(I - 2, J - 1));
                     }
 
                     break;
 
                 case KnightMoves.UpperLeftBottomCell:
-                    if ((knight.I - 1 >= 0 && knight.J - 2 >= 0))
+                    if ((I - 1 >= 0 && J - 2 >= 0))
                     {
-                        knight.VallidCells.Add(ChessTable.GetChessCell(knight.I - 1, knight.J - 2));
+                        VallidCells.Add(ChessTable.GetChessCell(I - 1, J - 2));
                     }
                     break;
 
                 case KnightMoves.LowerLeftBottomCell:
-                    if ((knight.I + 1 <= 7 && knight.J - 2 >= 0))
+                    if ((I + 1 <= 7 && J - 2 >= 0))
                     {
-                        knight.VallidCells.Add(ChessTable.GetChessCell(knight.I + 1, knight.J - 2));
+                        VallidCells.Add(ChessTable.GetChessCell(I + 1, J - 2));
                     }
                     break;
                 case KnightMoves.LowerLeftTopCell:
-                    if ((knight.I + 2 <= 7 && knight.J - 1 >= 0))
+                    if ((I + 2 <= 7 && J - 1 >= 0))
                     {
-                        knight.VallidCells.Add(ChessTable.GetChessCell(knight.I + 2, knight.J - 1));
+                        VallidCells.Add(ChessTable.GetChessCell(I + 2, J - 1));
                     }
 
                     break;
                 case KnightMoves.UpperRightTopCell:
-                    if ((knight.I - 2 > +0 && knight.J + 1 <= 7))
+                    if ((I - 2 > +0 && J + 1 <= 7))
                     {
-                        knight.VallidCells.Add(ChessTable.GetChessCell(knight.I - 2, knight.J + 1));
+                        VallidCells.Add(ChessTable.GetChessCell(I - 2, J + 1));
                     }
                     break;
                 case KnightMoves.UpperRightBottomCell:
-                    if ((knight.I - 1 >= 0 && knight.J + 2 <= 7))
+                    if ((I - 1 >= 0 && J + 2 <= 7))
                     {
-                        knight.VallidCells.Add(ChessTable.GetChessCell(knight.I - 1, knight.J + 2));
+                        VallidCells.Add(ChessTable.GetChessCell(I - 1, J + 2));
                     }
                     break;
                 case KnightMoves.LowerRightTopCell:
-                    if ((knight.I + 2 <= 7 && knight.J + 1 <= 7))
+                    if ((I + 2 <= 7 && J + 1 <= 7))
                     {
-                        knight.VallidCells.Add(ChessTable.GetChessCell(knight.I + 2, knight.J + 1));
+                        VallidCells.Add(ChessTable.GetChessCell(I + 2, J + 1));
                     }
 
                     break;
                 case KnightMoves.LowerRightBottomCell:
-                    if ((knight.I + 1 <= 7 && knight.J + 2 <= 7))
+                    if ((I + 1 <= 7 && J + 2 <= 7))
                     {
 
-                        knight.VallidCells.Add(ChessTable.GetChessCell(knight.I + 1, knight.J + 2));
+                        VallidCells.Add(ChessTable.GetChessCell(I + 1, J + 2));
 
                     }
                     break;
@@ -124,20 +120,18 @@ namespace chess
                     break;
             }
         }
-        public override void ProduceValidCells(ChessPiece knight)
+        public override void ProduceValidCells()
         {
-            knight.VallidCells.Clear();
+            VallidCells.Clear();
 
 
             for (int i = 0; i <= 8; i++)
             {
-                CheckKnightMovesValidation((Knight)knight, (KnightMoves)i);
+                CheckKnightMovesValidation((KnightMoves)i);
             }
             //CheckPiecesOnTheWay(knight);
 
 
-
-            DeleteInvalidCellsFromList(knight);
         }
 
 

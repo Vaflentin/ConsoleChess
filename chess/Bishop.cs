@@ -30,15 +30,15 @@ namespace chess
 
         //}
 
-        public override void ProduceValidCells(ChessPiece bishop)
+        public override void ProduceValidCells()
         {
-            bishop.VallidCells.Clear();
-            Bishop currentBishop = (Bishop)bishop;
-            currentBishop.ProduceDiagonalCells();
-            currentBishop.CheckPiecesOnTheWay();
+            VallidCells.Clear();
+            
+          ProduceDiagonalCells();
+           CheckPiecesOnTheWay();
             //CheckAlliesOnDiagonalyLines((currentBishop));
             MergeVallidCellsArray();
-            DeleteInvalidCellsFromList(bishop);
+            DeleteInvalidCellsFromList();
         }
     }
 

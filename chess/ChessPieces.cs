@@ -59,9 +59,7 @@ namespace chess
         {
           
                 ChessPiece currentPiece = chessPiece;
-
                 ChessTable.DeletePiece(chessPiece.I, chessPiece.J);
-
 
                 currentPiece.I = i;
                 currentPiece.J = j;
@@ -71,7 +69,6 @@ namespace chess
                 ChessTable.PlacePiece(currentPiece);
 
                 ChessTable.SetChessLog(currentPiece.PieceName, currentPiece.I, currentPiece.J);
-
         }
 
 
@@ -92,10 +89,10 @@ namespace chess
             return allCellLists;
         }
 
-        public static void DeleteInvalidCellsFromList(ChessPiece chessPiece)
+        public void DeleteInvalidCellsFromList()
         {
-            chessPiece._validCells.RemoveAll((cell => !Regex.IsMatch((cell.I.ToString() + cell.J.ToString()), "(?=.{2}$)[0-7][0-7]+")));
-            chessPiece._validCells.RemoveAll(cell => (cell.I == chessPiece.I) && (cell.J == chessPiece.J));
+           _validCells.RemoveAll((cell => !Regex.IsMatch((cell.I.ToString() + cell.J.ToString()), "(?=.{2}$)[0-7][0-7]+")));
+            _validCells.RemoveAll(cell => (cell.I == I) && (cell.J == J));
         }
 
         protected static bool CheckForValidCell(int i, int j, List<ChessCells> validCells)
@@ -124,17 +121,18 @@ namespace chess
         {
 
             var chessCell = ChessTable.GetChessCell(i, j);
-            var piece = chessCell.ChessPiece;
+            //var piece = chessCell.ChessPiece;
 
             if (chessCell.HasPiece && chessCell.ChessPiece.PieceName == pieceName)
             {
-                piece.ProduceValidCells(piece);
-                piece.CheckPiecesOnTheWay();
-                if (piece.VallidCells.Count == 0)
-                {
-                    return Errors.NoAnyLegalMove;
-                }
-   
+                //piece.ProduceValidCells();
+                //piece.CheckPiecesOnTheWay();
+                //if (piece.VallidCells.Count == 0)
+                //{
+                //    return Errors.NoAnyLegalMove;
+                //}
+
+                    Player.ProduceAllPieces();
 
                 return Errors.NoErrors;
             }
@@ -148,7 +146,7 @@ namespace chess
 
 
 
-        abstract public void ProduceValidCells(ChessPiece chessPiece);
+        abstract public void ProduceValidCells();
        //public  virtual Errors ValidateSquares(ChessPiece chessPiece, int i, int j)
        // {
 

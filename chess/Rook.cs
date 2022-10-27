@@ -14,16 +14,16 @@ namespace chess
 
         }
 
-        public override void ProduceValidCells(ChessPiece rook)
+        public override void ProduceValidCells()
         {
-            rook.VallidCells.Clear();
-            Rook currentRook = (Rook)rook;
+           VallidCells.Clear();
 
-            currentRook.ProduceStraightCells();
+
+            ProduceStraightCells();
             //currentRook.CheckPiecesOnTheWay(currentRook);
           
             MergeVallidCellsArray();
-            DeleteInvalidCellsFromList(currentRook);
+            DeleteInvalidCellsFromList();
         }
 
         //public override Errors ValidateSquares(ChessPiece rook, int i, int j)

@@ -9,27 +9,64 @@ namespace chess
     class Player
     {
 
-        private static bool IsWhite { get; set; }
+        public List<ChessPiece> _playerPieces = new List<ChessPiece>(16);
+        private bool IsWhite { get; set; }
 
         public Player(bool isWhite)
         {
             IsWhite = isWhite;
         }
 
+        private static void ProducePlayerPieces(Player player)
+        {
+            foreach (var piece in player._playerPieces)
+            {
+                piece.ProduceValidCells();
+                piece.CheckPiecesOnTheWay();
+            }
+        }
+        public static void ProduceAllPieces()
+        {
+            ProducePlayerPieces(ChessManager._blackPlayer);
+            ProducePlayerPieces(ChessManager._whitePlayer);
+        }
 
+        private static void  GetAllPieces()
+        {
+            var chessTable = ChessTable.ChessCells;
+
+            foreach (var cell in chessTable)
+            {
+ 
+                if (cell.HasPiece)
+                {
+                    var piece = cell.ChessPiece;
+                    if (cell.ChessPiece.IsWhite)
+                    {
+                        AddPiece(ChessManager._whitePlayer, ref piece);
+                    }
+                    else AddPiece(ChessManager._blackPlayer, ref piece);
+                }
+            }
+        }
+        private static void AddPiece(Player player, ref ChessPiece piece)
+        {
+            if (player._playerPieces != null)
+            {
+                player._playerPieces.Add(piece);
+            }
+          
+        }
         public static void SetFullChessBoard()
 
         {
-
             PlaceKings();
             PlaceBishops();
             PlaceKnigths();
             PlacePawns();
             PlaceQueens();
             PlaceRooks();
-
-
-
+            GetAllPieces();
         }
 
 

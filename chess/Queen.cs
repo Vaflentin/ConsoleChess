@@ -165,17 +165,15 @@ namespace chess
         }
         public void MergeVallidCellsArray(List<ChessCells> baseCellList ,params List<ChessCells>[] Lists)
         {
-           baseCellList.Clear();
-
-
-
-            for (int i = 0; i < Lists.Length; i++)
+            if (baseCellList != null)
             {
-              baseCellList.AddRange(Lists[i]);
+                baseCellList.Clear();
+
+                for (int i = 0; i < Lists.Length; i++)
+                {
+                    baseCellList.AddRange(Lists[i]);
+                }
             }
-
-
-
 
         }
 
@@ -190,7 +188,7 @@ namespace chess
 
 
 
-            if (I - 1 >= 0)
+            if (I - 1 >= 0) // вверх
             {
                 for (int i = I - 1; i >= 0; i--)
                 {
@@ -198,7 +196,7 @@ namespace chess
                 }
             }
 
-            if (I + 1 < ChessTable.ChessCells.GetLength(0))
+            if (I + 1 < ChessTable.ChessCells.GetLength(0)) // вниз
             {
                 for (int i = I + 1; i < ChessTable.ChessCells.GetLength(0); i++)
                 {
@@ -207,7 +205,7 @@ namespace chess
             }
 
 
-            if (J - 1 >= 0)
+            if (J - 1 >= 0) // влево
             {
                 for (int j = J - 1; j >= 0; j--)
                 {
@@ -216,7 +214,7 @@ namespace chess
 
             }
 
-            if (J + 1 < ChessTable.ChessCells.GetLength(1))
+            if (J + 1 < ChessTable.ChessCells.GetLength(1)) // вправо
             {
                 for (int j = J + 1; j < ChessTable.ChessCells.GetLength(1); j++)
                 {
@@ -229,14 +227,12 @@ namespace chess
         }
 
 
-        public override void ProduceValidCells(ChessPiece queen)
+        public override void ProduceValidCells()
         {
-            queen.VallidCells.Clear();
-            Queen currentQueen = (Queen)queen;
+            VallidCells.Clear();
 
-
-            currentQueen.ProduceDiagonalCells();
-            currentQueen.ProduceStraightCells();
+            ProduceDiagonalCells();
+            ProduceStraightCells();
 
             CheckPiecesOnTheWay();
 
@@ -337,7 +333,7 @@ namespace chess
                 }
 
             }
-            MergeVallidCellsArray();
+
         }
 
 
@@ -355,7 +351,7 @@ namespace chess
         {
 
             SortThroughCellLists();
-
+            MergeVallidCellsArray();
         }
     }
 }

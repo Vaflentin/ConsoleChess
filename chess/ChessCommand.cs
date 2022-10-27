@@ -153,6 +153,8 @@ namespace chess
 
         public static void ProcessPieceMovementCommand(string userCommand, string currentPiece)
         {
+ 
+
             var convertedCoordinates = ChessDataValidation.ConvertCoordinates(currentPiece);
             var i = Convert.ToInt32(convertedCoordinates[0].ToString());
             var j = Convert.ToInt32(convertedCoordinates[1].ToString());
@@ -160,7 +162,7 @@ namespace chess
 
             var chessPiece = ChessTable.GetChessCell(i, j).ChessPiece;
 
-
+        
 
             ChessOutPut.HighLightPossibleMoves(chessPiece);
 
@@ -170,7 +172,7 @@ namespace chess
 
             Console.Write("Enter the command: ");
 
-     
+       
 
             userCommand = Console.ReadLine().ToLower();
             ValidateAndParseToUserCommands(userCommand);
