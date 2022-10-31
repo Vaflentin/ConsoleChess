@@ -10,7 +10,8 @@ namespace chess
     {
 
         public List<ChessPiece> _playerPieces = new List<ChessPiece>(16);
-        private bool IsWhite { get; set; }
+        public bool rightToMove;
+       public bool IsWhite { get; set; }
 
         public Player(bool isWhite)
         {
@@ -22,6 +23,7 @@ namespace chess
             foreach (var piece in player._playerPieces)
             {
                 piece.ProduceValidCells();
+                piece.FillAllAttackedEnmies();
                 piece.CheckPiecesOnTheWay();
             }
         }
@@ -49,7 +51,7 @@ namespace chess
                 }
             }
         }
-        private static void AddPiece(Player player, ref ChessPiece piece)
+       public static void AddPiece(Player player, ref ChessPiece piece)
         {
             if (player._playerPieces != null)
             {
@@ -235,17 +237,6 @@ namespace chess
 
         public static void CreatePiece(int i, int j, PieceNames pieceName)
         {
-
-            //Collumns j;
-            //int i;
-            //bool isWhite;
-            //PieceNames pieceName;
-            //string convertedPlayersPiece = ChessDataValidation.ConvertCoordinates(playersPiece);
-
-            //i = convertedPlayersPiece[2];
-            //j = (Collumns)convertedPlayersPiece[1];
-            //pieceName = (PieceNames)Enum.Parse(typeof(PieceNames), playersPiece[0].ToString().ToLower(), ignoreCase: true);
-
 
             switch (pieceName)
             {

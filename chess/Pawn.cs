@@ -9,6 +9,14 @@ namespace chess
     class Pawn : ChessPiece
     {
         private List<ChessCells> _attackingCells = new List<ChessCells>();
+ 
+
+        public List<ChessCells> AttackingCells
+        {
+            get { return _attackingCells; }
+            set { _attackingCells = value; }
+        }
+
 
         public Pawn(int i, int j, string pieceName, bool isWhite) : base(i, j, pieceName, isWhite)
         {

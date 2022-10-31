@@ -23,7 +23,7 @@ namespace chess
             //currentRook.CheckPiecesOnTheWay(currentRook);
           
             MergeVallidCellsArray();
-            DeleteInvalidCellsFromList();
+            //DeleteInvalidCellsFromList();
         }
 
         //public override Errors ValidateSquares(ChessPiece rook, int i, int j)

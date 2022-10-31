@@ -26,7 +26,7 @@ namespace chess
 
         }
 
-     
+      
         protected void ProduceDiagonalCells()
         {
             diagonalLowerLeftValidCells.Clear();
@@ -149,12 +149,17 @@ namespace chess
             foreach (var member in fields)
             {
 
-                if ( member.GetValue(this) is IList<ChessCells>)
+                if ( member.GetValue(this) is IList<ChessCells> && member.GetValue(this) != VallidCells)
                 {
-                    var memberValue = member.GetValue(this);
-                    List<ChessCells> currentList = (List<ChessCells>)memberValue;
+                   List<ChessCells> list = (List<ChessCells>)member.GetValue(this);
+                    if (list.Count != 0)
+                    {
+                        var memberValue = member.GetValue(this);
+                        List<ChessCells> currentList = (List<ChessCells>)memberValue;
 
-                   VallidCells.AddRange(currentList);
+                        VallidCells.AddRange(currentList);
+                    }
+               
                 }
              
 
@@ -234,7 +239,10 @@ namespace chess
             ProduceDiagonalCells();
             ProduceStraightCells();
 
-            CheckPiecesOnTheWay();
+            //FillAllAttackedEnmies();
+
+
+            //CheckPiecesOnTheWay();
 
 
 

@@ -9,11 +9,24 @@ namespace chess
 
     public abstract class ChessPiece
     {
-
         protected List<ChessCells> _validCells = new List<ChessCells>();
         protected List<ChessPiece> _attactedEnemies= new List<ChessPiece>();
         protected List<ChessPiece> _protectedAllies = new List<ChessPiece>();
+        protected List<ChessPiece> _allEnemiesOnTheWay = new List<ChessPiece>();
 
+        protected bool _isFirstMove = true;
+        private string _pieceName;
+        protected bool _isProtected;
+
+        public int I { get; protected set; }
+        public int J { get; protected set; }
+        public bool IsWhite { get; private set; }
+
+        public List<ChessPiece> AllEnemiesOnTheWay
+        {
+            get { return _allEnemiesOnTheWay; }
+            set { _allEnemiesOnTheWay = value; }
+        }
 
         public List<ChessPiece> ProtectedAllies
         {
@@ -27,23 +40,13 @@ namespace chess
             set { _attactedEnemies = value; }
         }
 
-
-
         public List<ChessCells> VallidCells
         {
             get { return _validCells; }
             set { _validCells = value; }
 
-
         }
-
-        public bool IsWhite { get; private set; }
-
-        private string _pieceName;
-        public int I { get; protected set; }
-        public int J { get; protected set; }
-
-        protected bool _isFirstMove = true;
+      
 
 
         abstract public void CheckPiecesOnTheWay();
@@ -69,6 +72,20 @@ namespace chess
                 ChessTable.PlacePiece(currentPiece);
 
                 ChessTable.SetChessLog(currentPiece.PieceName, currentPiece.I, currentPiece.J);
+        }
+        public void FillAllAttackedEnmies()
+        {
+            foreach (var cell in VallidCells)
+            {
+                if (cell.HasPiece)
+                {
+                    if (IsWhite && !cell.ChessPiece.IsWhite || !IsWhite && cell.ChessPiece.IsWhite)
+                    {
+                        _allEnemiesOnTheWay.Add(cell.ChessPiece);
+                    }
+               
+                }
+            }
         }
 
 
@@ -133,8 +150,9 @@ namespace chess
                 //}
 
                     Player.ProduceAllPieces();
-
+             
                 return Errors.NoErrors;
+     
             }
 
 
