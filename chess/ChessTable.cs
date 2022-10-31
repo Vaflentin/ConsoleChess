@@ -9,15 +9,7 @@ using System.Text.RegularExpressions;
 namespace chess
 {
 
-    public enum PieceNames : byte
-    {
-        p,
-        b,
-        q,
-        k,
-        h,
-        r
-    }
+
     public enum Collumns : byte
     {
         a, b, c, d, e, f, g, h

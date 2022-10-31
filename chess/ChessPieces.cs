@@ -7,6 +7,16 @@ using System.Reflection;
 namespace chess
 {
 
+    public enum PieceNames : byte
+    {
+        p,
+        b,
+        q,
+        k,
+        h,
+        r
+    }
+
     public abstract class ChessPiece
     {
         protected List<ChessCells> _validCells = new List<ChessCells>();
@@ -46,9 +56,18 @@ namespace chess
             set { _validCells = value; }
 
         }
-      
 
+        //protected void AddEnemy(ChessCells cell)
+        //{
 
+        //}
+       public void ClearAllPieceLists()
+        {
+            VallidCells.Clear();
+            AttactedEnemies.Clear();
+            ProtectedAllies.Clear();
+            AllEnemiesOnTheWay.Clear();
+        }
         abstract public void CheckPiecesOnTheWay();
 
       
@@ -58,6 +77,19 @@ namespace chess
            Move(chessPiece, i, j);
             
         }
+
+       protected static List<ChessCells> RemoveCellWithPieceFromList(List<ChessCells> pieceList)
+        {
+            pieceList.RemoveAll(cell => cell.HasPiece);
+
+            return pieceList;
+        }
+
+        protected static void DeleteNullList(List<List<ChessCells>> pieceLists)
+        {
+            pieceLists.RemoveAll(list => list.Count == 0 || list == null);
+        }
+
         public void Move(ChessPiece chessPiece, int i, int j)
         {
           
@@ -73,6 +105,7 @@ namespace chess
 
                 ChessTable.SetChessLog(currentPiece.PieceName, currentPiece.I, currentPiece.J);
         }
+
         public void FillAllAttackedEnmies()
         {
             foreach (var cell in VallidCells)
@@ -89,7 +122,7 @@ namespace chess
         }
 
 
-        protected List<List<ChessCells>> GetAllListFields()
+        public List<List<ChessCells>> GetAllListFields()
         {
             var listFields = GetType().GetFields(BindingFlags.Instance| BindingFlags.NonPublic );
             List<List<ChessCells>> allCellLists = new List<List<ChessCells>>();
@@ -148,9 +181,9 @@ namespace chess
                 //{
                 //    return Errors.NoAnyLegalMove;
                 //}
+               Player.ProduceAllPieces();
 
-                    Player.ProduceAllPieces();
-             
+
                 return Errors.NoErrors;
      
             }

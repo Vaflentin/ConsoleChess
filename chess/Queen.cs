@@ -126,11 +126,7 @@ namespace chess
                         diagonalUpperLeftValidCells.Add(ChessTable.GetChessCell(currentI, currentJ));
 
                     }
-
-
-
-
-                }
+              }
 
             }
 
@@ -138,6 +134,7 @@ namespace chess
 
         }
 
+       
 
         public void MergeVallidCellsArray()
         {
@@ -234,17 +231,14 @@ namespace chess
 
         public override void ProduceValidCells()
         {
-            VallidCells.Clear();
-
+        
             ProduceDiagonalCells();
             ProduceStraightCells();
+            MergeVallidCellsArray();
 
-            //FillAllAttackedEnmies();
-
+            FillAllAttackedEnmies();
 
             //CheckPiecesOnTheWay();
-
-
 
         }
 

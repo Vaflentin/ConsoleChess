@@ -102,18 +102,19 @@ namespace chess
         public static void ProcessFreeModeCommands()
         {
 
-            Player.CreatePiece(4, 5, PieceNames.k);
-            var cell1 = ChessTable.GetChessCell(4, 5);
-            var king = cell1.ChessPiece;
+            ////Player.CreatePiece(4, 5, PieceNames.k);
+            ////var cell1 = ChessTable.GetChessCell(4, 5);
+            ////var king = cell1.ChessPiece;
 
-            Player.CreatePiece(1, 5, PieceNames.k);
-            var cell2 = ChessTable.GetChessCell(1, 5);
-            var king2 = cell2.ChessPiece;
-            Player.AddPiece(ChessManager._whitePlayer, ref king);
-            Player.AddPiece(ChessManager._blackPlayer, ref king2);
+            ////Player.CreatePiece(1, 5, PieceNames.k);
+            ////var cell2 = ChessTable.GetChessCell(1, 5);
+            ////var king2 = cell2.ChessPiece;
 
-            ChessTable.PlacePiece(king);
-            ChessTable.PlacePiece(king2);
+            ////Player.AddPiece(ChessManager._whitePlayer, ref king);
+            ////Player.AddPiece(ChessManager._blackPlayer, ref king2);
+
+            //ChessTable.PlacePiece(king);
+            //ChessTable.PlacePiece(king2);
 
             ChessOutPut.ChessTableOutPut();
 

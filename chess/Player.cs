@@ -8,7 +8,7 @@ namespace chess
 {
     class Player
     {
-
+        private static List<ChessPiece> _allPieces = new List<ChessPiece>(32);
         public List<ChessPiece> _playerPieces = new List<ChessPiece>(16);
         public bool rightToMove;
        public bool IsWhite { get; set; }
@@ -18,19 +18,25 @@ namespace chess
             IsWhite = isWhite;
         }
 
-        private static void ProducePlayerPieces(Player player)
+        private static void ProducePlayerPieces(List<ChessPiece> list)
         {
-            foreach (var piece in player._playerPieces)
+            foreach (var piece in list)
             {
+                piece.ClearAllPieceLists();
                 piece.ProduceValidCells();
                 piece.FillAllAttackedEnmies();
                 piece.CheckPiecesOnTheWay();
             }
+           King.CheckIsKingUnderAttack();
         }
         public static void ProduceAllPieces()
         {
-            ProducePlayerPieces(ChessManager._blackPlayer);
-            ProducePlayerPieces(ChessManager._whitePlayer);
+            _allPieces.Clear();
+
+            _allPieces.AddRange(ChessManager._blackPlayer._playerPieces);
+            _allPieces.AddRange(ChessManager._whitePlayer._playerPieces);
+            ProducePlayerPieces(_allPieces);
+            //ProducePlayerPieces(ChessManager._whitePlayer);
         }
 
         private static void  GetAllPieces()
@@ -43,6 +49,7 @@ namespace chess
                 if (cell.HasPiece)
                 {
                     var piece = cell.ChessPiece;
+
                     if (cell.ChessPiece.IsWhite)
                     {
                         AddPiece(ChessManager._whitePlayer, ref piece);
@@ -68,6 +75,7 @@ namespace chess
             PlacePawns();
             PlaceQueens();
             PlaceRooks();
+
             GetAllPieces();
         }
 
@@ -289,11 +297,7 @@ namespace chess
 
             }
 
-
-
         }
 
-
     }
-
 }

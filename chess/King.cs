@@ -14,7 +14,7 @@ namespace chess
         {
 
         }
-        private void CheckIsKingUnderAttack()
+       public static void CheckIsKingUnderAttack()
         {
          
 
@@ -25,32 +25,9 @@ namespace chess
                 RemoveCellIntersection(ChessManager._blackPlayer);
         
             
-            //ProduceDiagonalCells();
-            //ProduceStraightCells();
-
-            //MergeVallidCellsArray(
-            //    SuspiciousChecksCells,
-            //    diagonalLowerLeftValidCells, 
-            //    diagonalLowerRightValidCells, 
-            //    diagonalUpperLeftValidCells,
-            //    diagonalUpperRightValidCells,
-            //    straightDownLineValidCells,  
-            //    straightLeftLineValidCells, 
-            //    straightRightLineValidCells, 
-            //    straightUpLineValidCells
-            //    );
-            //SortThroughCellLists();
         }
 
-        //protected override void SortThroughCellLists()
-        //{
-        //    var allListOfValidCells = GetAllListFields();
-
-        //    foreach (var list in allListOfValidCells)
-        //    {
-        //        ProccessSuspiciousCells(list);
-        //    }
-        //}
+     
        private static List<ChessCells> AssignPieceList(ChessPiece chessPiece)
         {
             List<ChessCells> attacingCellList;
@@ -106,13 +83,13 @@ namespace chess
 
             foreach (var piece in player._playerPieces)
             {
-                if (piece.AttactedEnemies.Exists(piece => piece.GetType() == typeof(King)))
+                if (piece.AllEnemiesOnTheWay.Exists(piece => piece.GetType() == typeof(King)))
                 {
                     if (player.IsWhite)
                     {
                         king = (King)ChessManager._blackPlayer._playerPieces.Find(king => king.GetType() == typeof(King));
 
-                        if (!king.IsWhite)
+                        if (!CheckIsAllyCoverKing(king, piece))
                         {
                             king.IsChecked = true;
                         }
@@ -121,7 +98,8 @@ namespace chess
                     else 
                     {
                         king = (King)ChessManager._whitePlayer._playerPieces.Find(king => king.GetType() == typeof(King));
-                        if (king.IsWhite)
+
+                        if (!CheckIsAllyCoverKing(king, piece))
                         {
                             king.IsChecked = true;
                         }
@@ -133,80 +111,100 @@ namespace chess
             }
             return false;
         }
-
-
-        private bool CheckAllyCoverKing(ChessPiece chessPiece)
+        private static bool CheckIsAllyCoverKing(King king, ChessPiece enemyPiece)
         {
-            int firstI, secondI;
-            if (I < chessPiece.I)
+            foreach (var allyPiece in king.ProtectedAllies)
             {
-                firstI = I;
-                secondI = chessPiece.I;
-            }
-            else
-                firstI = chessPiece.I;
-                secondI = I;
+                var attackedPiece = enemyPiece.AttactedEnemies.Find(attackedPiece => attackedPiece == allyPiece);
 
-
-            foreach (var piece in chessPiece.AllEnemiesOnTheWay)
-            {
-                if (firstI < piece.I && piece.I < secondI)
+                if (attackedPiece != null)
                 {
-                    piece.VallidCells.Clear();
+
+                    ProcessMovmentOfProtectingPiece(allyPiece, enemyPiece);
+
                     return true;
-                }
+                } 
             }
+
             return false;
-            //foreach (var cell in kingsList)
-            //{
-            //    if (cell.HasPiece)
-            //    {
-            //        if (IsWhite && cell.ChessPiece.IsWhite)
-            //        {
-            //            return true;
-            //        }
-            //        else if (!IsWhite && !cell.ChessPiece.IsWhite)
-            //        {
-            //            return true;
-            //        }
-            //    }
 
-
-            //}
-            //return false;
         }
-
-        //private void ProccessSuspiciousCells(List<ChessCells> currentList)
+        //foreach (var attackedCell in enemyPiece.VallidCells)
         //{
-        //    ComparerI comparerI = new ComparerI();
-
-        //    if (currentList == straightUpLineValidCells || currentList == straightLeftLineValidCells
-        //        || currentList == diagonalUpperLeftValidCells || currentList == diagonalUpperRightValidCells)
+        //    if (allyPiece.VallidCells.Count !=0)
         //    {
-        //        currentList.Sort(comparerI);
-        //    }
+        //        var allyList = new List<ChessCells>(allyPiece.VallidCells);
 
-        //    foreach (var cell in currentList)
-        //    {
-        //        if (cell.HasPiece /*&& CheckIsKingOnTheWay()*/)
+
+        //        foreach (var cell in allyList)
         //        {
-            
 
-        //            if (CheckAllyCoverKing(cell.ChessPiece))
-        //            {
-                
-        //            }
-        //            else
-        //            {
-        //                VallidCells.Clear();
-        //            }
+
+        //            //if (cell != attackedCell)
+        //            //{
+        //            //    allyPiece.VallidCells.Clear();
+        //            //}
         //        }
         //    }
 
         //}
-        private  void CheckCanPieceCoverTheKing(King king)
+
+        private static void ProcessMovmentOfProtectingPiece(ChessPiece allyPiece, ChessPiece enemyPiece)
         {
+            PieceNames piece = (PieceNames)Enum.Parse(typeof(PieceNames), allyPiece.PieceName);
+           
+            switch (allyPiece)
+            {
+                case Queen:
+                    ProcessProtecingPieceVallidCells(allyPiece, enemyPiece);
+                    break;
+
+                case Pawn:
+                    ProcessProtecingPieceVallidCells(allyPiece, enemyPiece);
+                    break;
+        
+            }
             //VallidCells.Find();
+        }
+      
+
+        private static void ProcessProtecingPieceVallidCells(ChessPiece allyPiece, ChessPiece enemyPiece)
+        {
+            var allEnemyMovmentLists = enemyPiece.GetAllListFields();
+            var allAllyMovmentLists = allyPiece.GetAllListFields();
+
+            DeleteNullList(allAllyMovmentLists);
+            DeleteNullList(allEnemyMovmentLists);
+
+       
+
+            foreach (var enemyList in allEnemyMovmentLists)
+            {
+                var tempEnemyList = new List<ChessCells>(enemyList);
+                RemoveCellWithPieceFromList(tempEnemyList)
+    ;
+
+                foreach (var allyList in allAllyMovmentLists)
+                {
+                   var tempAllyList = new List<ChessCells>(allyList);
+                   RemoveCellWithPieceFromList(tempAllyList);
+
+
+
+                    if (tempAllyList.SequenceEqual(tempEnemyList))
+                    {
+                        allyPiece.VallidCells.Clear();
+                        allyPiece.VallidCells.AddRange(allyList);
+
+                        return;
+                    }
+                    else
+                    {
+                        allyPiece.VallidCells.Clear();
+                    }
+                }
+            }
+
         }
 
         public override void CheckPiecesOnTheWay() // todo:: рефакторить
@@ -218,29 +216,25 @@ namespace chess
 
                 if (cell.HasPiece)
                 {
-                    if (IsWhite && cell.ChessPiece.IsWhite)
+                    if (IsWhite && cell.ChessPiece.IsWhite || !IsWhite && !cell.ChessPiece.IsWhite)
                     {
                         ProtectedAllies.Add(cell.ChessPiece);
                         VallidCells.Remove(cell);
                     }
-                    else AttactedEnemies.Add(cell.ChessPiece);
+                    if (IsWhite && !cell.ChessPiece.IsWhite || !IsWhite && cell.ChessPiece.IsWhite)
+                    {
+                        AttactedEnemies.Add(cell.ChessPiece);
+                    }
 
-                    if (!IsWhite && !cell.ChessPiece.IsWhite)
-                    {
-                        ProtectedAllies.Add(cell.ChessPiece);
-                        VallidCells.Remove(cell);
-                    }
-                    else AttactedEnemies.Add(cell.ChessPiece);
                 }
             }
-            CheckIsKingUnderAttack();
         }
 
         public override void ProduceValidCells()
         {
 
             _kingAllCellToMove.Clear();
-            _validCells.Clear();
+        
 
             for (int i = I - 1; i <= I + 1; i++)
             {

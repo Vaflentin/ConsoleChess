@@ -34,7 +34,8 @@ namespace chess
         {
             VallidCells.Clear();
             
-          ProduceDiagonalCells();
+           ProduceDiagonalCells();
+
            CheckPiecesOnTheWay();
             //CheckAlliesOnDiagonalyLines((currentBishop));
             MergeVallidCellsArray();

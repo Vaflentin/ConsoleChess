@@ -33,7 +33,7 @@ namespace chess
 
             _attackingCells.Clear();
 
-                 if (IsWhite && I - 1 > 0)
+                 if ((IsWhite && I - 1 > 0) )
                     {
 
                        
@@ -57,30 +57,33 @@ namespace chess
                     if (!IsWhite && I + 1 < 7)
 
                     {
-                               
-                                            if (J - 1 >= 0)
-                                            {
-                                                leftAttackedCell = ChessTable.GetChessCell(I + 1, J - 1);
-                                                _attackingCells.Add(leftAttackedCell);
-                                            }
-                                            if (J + 1 < 8)
-                                            {
-                                                rightAttackedCell = ChessTable.GetChessCell(I + 1, J + 1);
 
-                                                _attackingCells.Add(rightAttackedCell);
-                                            }
+                        if (J - 1 >= 0)
+                        {
+                            leftAttackedCell = ChessTable.GetChessCell(I + 1, J - 1);
+                            _attackingCells.Add(leftAttackedCell);
+                        }
+                        if (J + 1 < 8)
+                        {
+                            rightAttackedCell = ChessTable.GetChessCell(I + 1, J + 1);
+
+                            _attackingCells.Add(rightAttackedCell);
+                        }
 
 
                     }
 
 
-                    foreach (var cell in _attackingCells)
+            foreach (var cell in _attackingCells)
                     {
                         if (cell.HasPiece)
                         {
-                            VallidCells.Add(cell);
-                            AttactedEnemies.Add(cell.ChessPiece);
-
+                            if ((IsWhite && !cell.ChessPiece.IsWhite) || (!IsWhite && cell.ChessPiece.IsWhite))
+                            {
+                                VallidCells.Add(cell);
+                                AttactedEnemies.Add(cell.ChessPiece);
+                            }
+        
                         }
 
                     }
