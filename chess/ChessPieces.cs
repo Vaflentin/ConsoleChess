@@ -23,6 +23,7 @@ namespace chess
         protected List<ChessPiece> _attactedEnemies= new List<ChessPiece>();
         protected List<ChessPiece> _protectedAllies = new List<ChessPiece>();
         protected List<ChessPiece> _allEnemiesOnTheWay = new List<ChessPiece>();
+        protected List<ChessPiece> _allProtectedAllies = new List<ChessPiece>();
 
         protected bool _isFirstMove = true;
         private string _pieceName;
@@ -61,6 +62,42 @@ namespace chess
         //{
 
         //}
+        public static List<ChessPiece> DeleteNoPieceCells(List<ChessCells> vallidCells)
+        {
+      
+           List<ChessCells> tempList = new(vallidCells);
+            tempList.RemoveAll(cell => !cell.HasPiece);
+
+            List<ChessPiece> result = new();
+
+            foreach (var piece in tempList)
+            {
+                result.Add(piece.ChessPiece);
+            }
+
+            return result;
+        }
+        
+    
+
+        //protected static void AddEnemiesAndAllies(King king, List<ChessCells> vallidCells)
+        //{
+        //    var pieces = DeleteNoPieceCells(vallidCells);
+        //    var whitePieces = pieces.FindAll(piece => piece.IsWhite);
+        //    var blackPieces = pieces.FindAll(pieces => !pieces.IsWhite);
+
+        //    if (king.IsWhite)
+        //    {
+        //        king.AllEnemiesOnTheWay.AddRange(blackPieces);
+        //        king._allProtectedAllies.AddRange(whitePieces);
+        //    }
+        //    else
+        //    {
+        //        king.AllEnemiesOnTheWay.AddRange(whitePieces);
+        //        king._allProtectedAllies.AddRange(blackPieces);
+        //    }
+           
+        //}
        public void ClearAllPieceLists()
         {
             VallidCells.Clear();
@@ -85,10 +122,11 @@ namespace chess
             return pieceList;
         }
 
-        protected static void DeleteNullList(List<List<ChessCells>> pieceLists)
+        protected static void DeleteNullList<T>(List<List<T>> pieceLists)
         {
             pieceLists.RemoveAll(list => list.Count == 0 || list == null);
         }
+      
 
         public void Move(ChessPiece chessPiece, int i, int j)
         {
@@ -108,6 +146,8 @@ namespace chess
 
         public void FillAllAttackedEnmies()
         {
+            _attactedEnemies.Clear();
+
             foreach (var cell in VallidCells)
             {
                 if (cell.HasPiece)
@@ -120,19 +160,74 @@ namespace chess
                 }
             }
         }
-
-
-        public List<List<ChessCells>> GetAllListFields()
+        private List<ChessCells> RemoveNoPieceCell(List<ChessCells> list)
         {
+            var tempolarList = new List<ChessCells>(list);
+
+            foreach (var cell in tempolarList)
+            {
+                if (!cell.HasPiece)
+                {
+                    list.Remove(cell);
+                }
+            }
+            return list;
+        }
+
+        protected  List<List<ChessPiece>> ProcessAllPiecesOnTheWay(List<ChessCells> list)
+        {
+            var onlyPieceList = RemoveNoPieceCell(list);
+
+            foreach (var cell in onlyPieceList)
+            {
+                if (IsWhite && cell.ChessPiece.IsWhite || !IsWhite && !cell.ChessPiece.IsWhite)
+                {
+                    _allProtectedAllies.Add(cell.ChessPiece);
+                }
+                if (!IsWhite && cell.ChessPiece.IsWhite || IsWhite && !cell.ChessPiece.IsWhite)
+                {
+                    _allEnemiesOnTheWay.Add(cell.ChessPiece);
+                }
+            }
+            List<List<ChessPiece>> allEnemyAndAllAllies = new List<List<ChessPiece>>(2);
+            allEnemyAndAllAllies.Add(_allEnemiesOnTheWay);
+            allEnemyAndAllAllies.Add(_allProtectedAllies);
+
+            return allEnemyAndAllAllies;
+        }
+
+        public List<List<ChessPiece>> GetAllChessPieceLists()
+        {
+            var listFields = GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
+            List<List<ChessPiece>> allCellLists = new List<List<ChessPiece>>();
+
+            foreach (var field in listFields)
+            {
+                if (field.FieldType.IsGenericType &&  field.GetValue(this) is List<ChessPiece> list )
+                {
+
+                    var currentList = list;
+                    allCellLists.Add(currentList);
+
+                }
+            }
+
+            return allCellLists;
+        }
+        public virtual List<List<ChessCells>> GetAllChessCellsListFields()
+        {
+
             var listFields = GetType().GetFields(BindingFlags.Instance| BindingFlags.NonPublic );
             List<List<ChessCells>> allCellLists = new List<List<ChessCells>>();
   
             foreach (var field in listFields)
             {
-                   if (field.FieldType.IsGenericType && field.Name != "VallidCells" && field.Name != "vallidCells" && field.GetValue(this) is List<ChessCells>)
+                   if (field.FieldType.IsGenericType && field.Name != "VallidCells" && field.Name != "vallidCells" && field.GetValue(this) is List<ChessCells> list)
                 {
-                    var currentList = (List <ChessCells>)field.GetValue(this);
-                    allCellLists.Add(currentList);
+               
+                        var currentList = list;
+                        allCellLists.Add(currentList);
+                
                 }
             }
 

@@ -34,9 +34,10 @@ namespace chess
         {
             VallidCells.Clear();
             
-           ProduceDiagonalCells();
+            ProduceDiagonalCells();
+            AddAllEnemiesOnDiagonals();
 
-           CheckPiecesOnTheWay();
+            CheckPiecesOnTheWay();
             //CheckAlliesOnDiagonalyLines((currentBishop));
             MergeVallidCellsArray();
             DeleteInvalidCellsFromList();

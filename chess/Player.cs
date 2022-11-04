@@ -18,7 +18,7 @@ namespace chess
             IsWhite = isWhite;
         }
 
-        private static void ProducePlayerPieces(List<ChessPiece> list)
+        private static void ProducePlayerPieces(ref List<ChessPiece> list)
         {
             foreach (var piece in list)
             {
@@ -35,8 +35,8 @@ namespace chess
 
             _allPieces.AddRange(ChessManager._blackPlayer._playerPieces);
             _allPieces.AddRange(ChessManager._whitePlayer._playerPieces);
-            ProducePlayerPieces(_allPieces);
-            //ProducePlayerPieces(ChessManager._whitePlayer);
+            ProducePlayerPieces(ref _allPieces);
+     
         }
 
         private static void  GetAllPieces()

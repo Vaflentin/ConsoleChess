@@ -15,7 +15,10 @@ namespace chess
         public override void ProduceValidCells()
         {
             VallidCells.Clear();
+
             ProduceStraightCells();
+            AddAllEnemiesOnFilesAndRanks();
+
             MergeVallidCellsArray();
  
         }
