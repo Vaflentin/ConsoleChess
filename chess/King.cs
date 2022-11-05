@@ -86,16 +86,17 @@ namespace chess
             {
                 if (!playerPiece.AttactedEnemies.Exists(piece => piece.GetType() == typeof(King)))
                 {
-                    var enemiesPiecesLists = playerPiece.GetAllChessPieceLists();
+                    var enemiesPiecesLists = playerPiece.GetAllPublicChessCellsLists();
                     DeleteNullList(enemiesPiecesLists);
 
                     if (enemiesPiecesLists != null)
                     {
                         foreach (var listWithEnemies in enemiesPiecesLists)
                         {
-                            if (listWithEnemies.Exists(piece => piece.GetType() == typeof(King)))
+                            if (listWithEnemies.Exists(piece => piece.HasPiece && piece.ChessPiece.GetType() == typeof(King)))
                             {
-                                var king = (King)listWithEnemies.Find(piece => piece.GetType() == typeof(King));
+                                var kingCell = listWithEnemies.Find(piece => piece.HasPiece && piece.ChessPiece.GetType() == typeof(King));
+                                King king = (King)kingCell.ChessPiece;
                                 CheckIsAllyCoverKing(king, playerPiece, listWithEnemies);
 
                             }
@@ -113,20 +114,21 @@ namespace chess
                 
             }
         }
-            private static void CheckIsAllyCoverKing(King king, ChessPiece enemy, List<ChessPiece> enemyChessPieceList)
+            private static void CheckIsAllyCoverKing(King king, ChessPiece enemy, List<ChessCells> enemyChessPieceList)
             {
 
                 foreach (var ally in enemyChessPieceList)
                 {
                     
-                        if (enemy.AttactedEnemies.Exists(attackedPiece => attackedPiece == ally) && ally != king)
+                        if (enemy.AttactedEnemies.Exists(attackedPiece => attackedPiece == ally.ChessPiece) && ally.ChessPiece != king)
                         {
-                            var currentElIndex = enemyChessPieceList.IndexOf(ally);
-                            var kingIndex = enemyChessPieceList.FindIndex(piece => piece.GetType() == typeof(King));
+                            List<ChessPiece> enemyPieces = new(DeleteNoPieceCells(enemyChessPieceList));
+                            var currentElIndex = enemyPieces.IndexOf(ally.ChessPiece);
+                            var kingIndex = enemyPieces.FindIndex(piece => piece.GetType() == typeof(King));
 
                             if (currentElIndex + 1 == kingIndex)
                             {
-                                ProcessMovmentOfProtectingPiece(ally, enemy);
+                                ProcessMovmentOfProtectingPiece(ally.ChessPiece, enemy, enemyChessPieceList);
                             }
                           
                              break;
@@ -144,18 +146,18 @@ namespace chess
         
         
 
-        private static void ProcessMovmentOfProtectingPiece(ChessPiece allyPiece, ChessPiece enemyPiece)
+        private static void ProcessMovmentOfProtectingPiece(ChessPiece allyPiece, ChessPiece enemyPiece, List<ChessCells> enemyChessPieceList)
         {
             PieceNames piece = (PieceNames)Enum.Parse(typeof(PieceNames), allyPiece.PieceName);
 
             switch (allyPiece)
             {
                 case Queen:
-                    ProcessProtecingPieceVallidCells(allyPiece, enemyPiece);
+                    ProcessProtecingPieceVallidCells(allyPiece, enemyPiece, enemyChessPieceList);
                     break;
 
                 case Pawn:
-                    ProcessProtecingPieceVallidCells(allyPiece, enemyPiece);
+                    ProcessProtecingPieceVallidCells(allyPiece, enemyPiece, enemyChessPieceList);
                     break;
 
             }
@@ -163,7 +165,7 @@ namespace chess
         }
 
 
-        private static void ProcessProtecingPieceVallidCells(ChessPiece allyPiece, ChessPiece enemyPiece)
+        private static void ProcessProtecingPieceVallidCells(ChessPiece allyPiece, ChessPiece enemyPiece, List<ChessCells> enemyChessPieceList)
         {
             var allEnemyMovmentLists = enemyPiece.GetAllChessCellsListFields();
             var allAllyMovmentLists = allyPiece.GetAllChessCellsListFields();
@@ -173,23 +175,31 @@ namespace chess
 
 
 
-            foreach (var enemyList in allEnemyMovmentLists)
+            foreach (var enemyVallidCellList in allEnemyMovmentLists)
             {
-                var tempEnemyList = new List<ChessCells>(enemyList);
-                RemoveCellWithPieceFromList(tempEnemyList)
-    ;
+                var tempEnemyList = new List<ChessCells>(enemyVallidCellList);
+                RemoveCellWithPieceFromList(tempEnemyList);
+                  
 
                 foreach (var allyList in allAllyMovmentLists)
                 {
                     var tempAllyList = new List<ChessCells>(allyList);
                     RemoveCellWithPieceFromList(tempAllyList);
 
-
-
                     if (tempAllyList.SequenceEqual(tempEnemyList))
                     {
                         allyPiece.VallidCells.Clear();
-                        allyPiece.VallidCells.AddRange(allyList);
+
+                        var newVallidCells = new List<ChessCells>(enemyChessPieceList);
+                        var kingCell = newVallidCells.Find(piece => piece.HasPiece && piece.ChessPiece.GetType() == typeof(King));
+                        var kingIndex = newVallidCells.IndexOf(kingCell);
+
+                        newVallidCells.RemoveRange(kingIndex, newVallidCells.Count - kingIndex);
+
+                        newVallidCells.Add(ChessTable.GetChessCell(enemyPiece.I, enemyPiece.J));
+                        newVallidCells.Remove(ChessTable.GetChessCell(allyPiece.I, allyPiece.J));
+
+                        allyPiece.VallidCells.AddRange(newVallidCells);
 
                         return;
                     }

@@ -121,6 +121,13 @@ namespace chess
 
             return pieceList;
         }
+        protected void ClearListsArray<T>(params List<T>[] lists)
+        {
+            foreach (var list in lists)
+            {
+                list.Clear();
+            }
+        }
 
         protected static void DeleteNullList<T>(List<List<T>> pieceLists)
         {
@@ -196,6 +203,25 @@ namespace chess
             return allEnemyAndAllAllies;
         }
 
+        public List<List<ChessCells>> GetAllPublicChessCellsLists()
+        {
+            var listFields = GetType().GetFields(BindingFlags.Instance | BindingFlags.Public);
+            List<List<ChessCells>> allCellLists = new List<List<ChessCells>>();
+
+            foreach (var field in listFields)
+            {
+                if (field.FieldType.IsGenericType && field.GetValue(this) is List<ChessCells> list)
+                {
+
+                    var currentList = list;
+                    allCellLists.Add(currentList);
+
+                }
+            }
+
+            return allCellLists;
+        }
+
         public List<List<ChessPiece>> GetAllChessPieceLists()
         {
             var listFields = GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
@@ -214,15 +240,17 @@ namespace chess
 
             return allCellLists;
         }
+
+       
         public virtual List<List<ChessCells>> GetAllChessCellsListFields()
         {
 
-            var listFields = GetType().GetFields(BindingFlags.Instance| BindingFlags.NonPublic );
+            var listFields = GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
             List<List<ChessCells>> allCellLists = new List<List<ChessCells>>();
   
             foreach (var field in listFields)
             {
-                   if (field.FieldType.IsGenericType && field.Name != "VallidCells" && field.Name != "vallidCells" && field.GetValue(this) is List<ChessCells> list)
+                   if (field.FieldType.IsGenericType && field.Name != "VallidCells" && field.Name != "_vallidCells" && field.GetValue(this) is List<ChessCells> list)
                 {
                
                         var currentList = list;

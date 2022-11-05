@@ -385,15 +385,15 @@ namespace chess
         protected List<ChessCells> _leftRankValidCells = new List<ChessCells>();
         protected List<ChessCells> _rightRankValidCells = new List<ChessCells>();
 
-        protected List<ChessPiece> _upperLeftDiagonalyEnemies = new();
-        protected List<ChessPiece> _upperRightDiagonalEnemies = new();
-        protected List<ChessPiece> _lowerLeftDiagonalEnemies = new();
-        protected List<ChessPiece> _lowerRightDiagonalEnemies = new();
+        public List<ChessCells> _upperLeftDiagonalyEnemies = new();
+        public List<ChessCells> _upperRightDiagonalEnemies = new();
+        public List<ChessCells> _lowerLeftDiagonalEnemies = new();
+        public List<ChessCells> _lowerRightDiagonalEnemies = new();
 
-        protected List<ChessPiece> _upperFileEnemies = new();
-        protected List<ChessPiece> _lowerFileEnemies = new();
-        protected List<ChessPiece> _leftRankEnemies = new();
-        protected List<ChessPiece> _rightRankEnemies = new();
+        public List<ChessCells> _upperFileEnemies = new();
+        public List<ChessCells> _lowerFileEnemies = new();
+        public List<ChessCells> _leftRankEnemies = new();
+        public List<ChessCells> _rightRankEnemies = new();
 
         public Queen(int i, int j, string pieceName, bool isWhite) : base(i, j, pieceName, isWhite)
         {
@@ -639,25 +639,24 @@ namespace chess
         }
         protected void AddAllEnemiesOnFilesAndRanks()
         {
-       
-                _upperFileEnemies = DeleteNoPieceCells(_upperFileValidCells);
-                _lowerFileEnemies = DeleteNoPieceCells(_lowerFileValidCells);
-                _rightRankEnemies = DeleteNoPieceCells(_rightRankValidCells);
-                _leftRankEnemies = DeleteNoPieceCells(_leftRankValidCells);
+            ClearListsArray(_upperFileEnemies, _lowerFileEnemies, _rightRankEnemies, _leftRankEnemies);
 
-            RemoveAlliesPieces(_upperFileEnemies, _lowerFileEnemies, _rightRankEnemies, _leftRankEnemies);
-         
-      
+                _upperFileEnemies.AddRange(_upperFileValidCells);
+                _lowerFileEnemies.AddRange(_lowerFileValidCells);
+                _rightRankEnemies.AddRange(_rightRankValidCells);
+                _leftRankEnemies.AddRange(_leftRankValidCells);
+
         }
         protected void AddAllEnemiesOnDiagonals()
         {
+            ClearListsArray(_upperLeftDiagonalyEnemies, _upperRightDiagonalEnemies, 
+                _lowerLeftDiagonalEnemies, _lowerRightDiagonalEnemies);
 
-             _upperLeftDiagonalyEnemies = DeleteNoPieceCells(_diagonalUpperLeftValidCells);
-             _upperRightDiagonalEnemies = DeleteNoPieceCells(_diagonalUpperRightValidCells);
-             _lowerLeftDiagonalEnemies = DeleteNoPieceCells(_diagonalLowerLeftValidCells);
-             _lowerRightDiagonalEnemies = DeleteNoPieceCells(_diagonalLowerRightValidCells);
+             _upperLeftDiagonalyEnemies.AddRange(_diagonalUpperLeftValidCells);
+             _upperRightDiagonalEnemies.AddRange(_diagonalUpperRightValidCells);
+             _lowerLeftDiagonalEnemies.AddRange(_diagonalLowerLeftValidCells);
+             _lowerRightDiagonalEnemies.AddRange(_diagonalLowerRightValidCells);
 
-            RemoveAlliesPieces(_upperLeftDiagonalyEnemies, _upperRightDiagonalEnemies, _lowerLeftDiagonalEnemies, _lowerRightDiagonalEnemies);
         }
 
 
@@ -759,6 +758,7 @@ namespace chess
         protected virtual void SortThroughCellLists()
         {
             var allListOfValidCells = GetAllChessCellsListFields();
+            DeleteNullList(allListOfValidCells);
 
             foreach (var list in allListOfValidCells)
             {
